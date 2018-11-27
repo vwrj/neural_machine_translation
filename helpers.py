@@ -52,11 +52,11 @@ def normalizeString(s):
     return s
 
 
-def readLangs(lang1, lang2, reverse=False):
+def readLangs(filename, lang1, lang2, reverse=False):
     print("Reading lines...")
 
     # Read the file and split into lines
-    lines = open('data/%s-%s.txt' % (lang1, lang2), encoding='utf-8').\
+    lines = open(filename, encoding='utf-8').\
         read().strip().split('\n')
 
     # Split every line into pairs and normalize
