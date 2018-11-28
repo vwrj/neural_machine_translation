@@ -74,8 +74,6 @@ def readLangs(filename, lang1, lang2, reverse=False):
     return input_lang, output_lang, pairs
 
 
-MAX_LENGTH = 10
-
 eng_prefixes = (
     "i am ", "i m ",
     "he is", "he s ",
