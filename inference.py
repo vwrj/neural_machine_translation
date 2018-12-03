@@ -1,3 +1,9 @@
+import torch
+import torch.nn as nn
+from torch import optim
+import torch.nn.functional as F
+from data_prep import tensorFromSentence
+
 def greedy_search(decoder, decoder_input, hidden, max_length):
     translation = []
     for i in range(max_length):
