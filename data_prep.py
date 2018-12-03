@@ -5,7 +5,9 @@ import string
 import re
 import random
 import numpy as np
+import torch
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 SOS_token = 0
 EOS_token = 1
@@ -102,3 +104,24 @@ def prepareData(input_file, target_file, input_lang, target_lang, size=None):
     print(input_lang.name, input_lang.n_words)
     print(target_lang.name, target_lang.n_words)
     return input_lang, target_lang, pairs
+
+def indexesFromSentence(lang, sentence):
+    words = sentence.split(' ')
+    indices = []
+    for word in words:
+        if lang.word2index.get(word) is not None:
+            indices.append(lang.word2index[word])
+        else:
+            indices.append(1) # UNK_INDEX
+    return indices
+
+def tensorFromSentence(lang, sentence):
+    indexes = indexesFromSentence(lang, sentence)
+    indexes.append(EOS_token)
+    return torch.tensor(indexes, dtype=torch.long, device=device).view(-1, 1)
+
+
+def tensorsFromPair(pair, input_lang, target_lang):
+    input_tensor = tensorFromSentence(input_lang, pair[0])
+    target_tensor = tensorFromSentence(target_lang, pair[1])
+    return (input_tensor, target_tensor)
