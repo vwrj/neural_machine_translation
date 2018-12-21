@@ -7,6 +7,7 @@ import random
 import numpy as np
 import pickle
 import time
+import gc
 
 import torch
 import torch.nn as nn
@@ -27,14 +28,14 @@ from misc import timeSince, load_cpickle_gc
 device = "cpu"
 
 
-BATCH_SIZE = 32
+BATCH_SIZE = 16
 PAD_token = 0
 PAD_TOKEN = 0
 SOS_token = 1
 EOS_token = 2
 UNK_token = 3
 teacher_forcing_ratio = 1.0
-attn_model = 'dot'
+attn_model = 'general'
 
 
 class LanguagePairDataset(Dataset):
@@ -76,45 +77,58 @@ def language_pair_dataset_collate_function(batch):
         sent2_list.append(padded_vec_2)
         sent1_length_list.append(len(datum[0]))
         sent2_length_list.append(len(datum[1]))
-    return [torch.from_numpy(np.array(sent1_list)), torch.cuda.LongTensor(sent1_length_list), 
-            torch.from_numpy(np.array(sent2_list)), torch.cuda.LongTensor(sent2_length_list)]
+    return [torch.from_numpy(np.array(sent1_list)), torch.LongTensor(sent1_length_list), 
+            torch.from_numpy(np.array(sent2_list)), torch.LongTensor(sent2_length_list)]
 
 
-input_lang, target_lang, train_pairs = prepareTrainData(
-    "iwslt-vi-en-processed/train.vi",
-    "iwslt-vi-en-processed/train.tok.en",
-    input_lang = 'vi',
-    target_lang = 'en')
+#input_lang, target_lang, train_pairs = prepareTrainData(
+#    "iwslt-vi-en-processed/train.tok.vi",
+#    "iwslt-vi-en-processed/train.tok.en",
+#    input_lang = 'vi',
+#    target_lang = 'en')
 
-train_idx_pairs = []
-for x in train_pairs:
-    indexed = list(tensorsFromPair(x, input_lang, target_lang))
-    train_idx_pairs.append(indexed)
-
-pickle.dump(input_lang, open("input_lang_vi", "wb"))
-pickle.dump(target_lang, open("target_lang_en", "wb"))
-pickle.dump(train_idx_pairs, open("train_vi_en_idx_pairs", "wb"))
-
-_, _, val_pairs = prepareTrainData(
-    "iwslt-vi-en-processed/dev.vi",
-    "iwslt-vi-en-processed/dev.en",
-    input_lang = 'vi',
-    target_lang = 'en')
-
-val_idx_pairs = []
-for x in val_pairs:
-    indexed = list(tensorsFromPair(x, input_lang, target_lang))
-    val_idx_pairs.append(indexed)
-
-pickle.dump(val_pairs, open("val_pairs", "wb"))
-pickle.dump(val_idx_pairs, open("val_idx_pairs", "wb"))
-
+#_, _, test_pairs= prepareTrainData(
+#    "iwslt-vi-en-processed/test.vi",
+#    "iwslt-vi-en-processed/test.en",
+#    input_lang = 'vi',
+#    target_lang = 'en')
 
 input_lang = load_cpickle_gc("input_lang_vi")
 target_lang = load_cpickle_gc("target_lang_en")
+
+#test_idx_pairs = []
+#for x in test_pairs:
+#    indexed = list(tensorsFromPair(x, input_lang, target_lang))
+#    test_idx_pairs.append(indexed)
+
 train_idx_pairs = load_cpickle_gc("train_vi_en_idx_pairs")
+train_idx_pairs = train_idx_pairs[:-5]
 val_idx_pairs = load_cpickle_gc("val_idx_pairs")
 val_pairs = load_cpickle_gc("val_pairs")
+
+print(len(train_idx_pairs))
+
+
+#train_idx_pairs = []
+#for x in train_pairs:
+#    indexed = list(tensorsFromPair(x, input_lang, target_lang))
+#    train_idx_pairs.append(indexed)
+
+#pickle.dump(input_lang, open("input_lang_vi", "wb"))
+#pickle.dump(target_lang, open("target_lang_en", "wb"))
+#pickle.dump(train_idx_pairs, open("train_vi_en_idx_pairs", "wb"))
+
+#_, _, val_pairs = prepareTrainData("iwslt-vi-en-processed/dev.vi","iwslt-vi-en-processed/dev.en",input_lang = 'vi',target_lang = 'en')
+
+#val_idx_pairs = []
+#for x in val_pairs:
+#    indexed = list(tensorsFromPair(x, input_lang, target_lang))
+#    val_idx_pairs.append(indexed)
+
+#pickle.dump(val_pairs, open("val_pairs", "wb"))
+#pickle.dump(val_idx_pairs, open("val_idx_pairs", "wb"))
+
+
 
 
 train_dataset = LanguagePairDataset(train_idx_pairs)
@@ -122,13 +136,20 @@ train_dataset = LanguagePairDataset(train_idx_pairs)
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, 
                                            batch_size=BATCH_SIZE, 
                                            collate_fn=language_pair_dataset_collate_function,
+										   shuffle=True
                                           )
 
-val_dataset = LanguagePairDataset(val_idx_pairs[:200])
+val_dataset = LanguagePairDataset(val_idx_pairs[:500])
 val_loader = torch.utils.data.DataLoader(dataset=val_dataset, 
                                            batch_size=1, 
                                            collate_fn=language_pair_dataset_collate_function,
                                           )
+
+#test_dataset = LanguagePairDataset(test_idx_pairs)
+#val_loader = torch.utils.data.DataLoader(dataset=test_dataset, 
+#                                           batch_size=1, 
+#                                           collate_fn=language_pair_dataset_collate_function,
+#                                          )
 
 class Encoder_Batch_RNN(nn.Module):
     def __init__(self, input_size, hidden_size):
@@ -224,7 +245,11 @@ class Attn(nn.Module):
         elif self.method == 'general':
             # hidden is 1 by 256
             # encoder_output is 256 by 22
-            energy = torch.matmul(hidden, self.attn(encoder_output))
+            # encoder_output = torch.transpose(encoder_output, 0, 1)
+            hidden = hidden.view(1, -1)
+            a = self.attn(encoder_output)
+            a = torch.transpose(a, 0, 1)
+            energy = torch.matmul(hidden, a)
             return energy
         
         elif self.method == 'concat':
@@ -244,7 +269,7 @@ class Attn(nn.Module):
         
         
 class LuongAttnDecoderRNN(nn.Module):
-    def __init__(self, attn_model, hidden_size, output_size, n_layers=1, dropout=0.1):
+    def __init__(self, attn_model, hidden_size, output_size, n_layers=1):
         super(LuongAttnDecoderRNN, self).__init__()
 
         # Keep for reference
@@ -252,12 +277,10 @@ class LuongAttnDecoderRNN(nn.Module):
         self.hidden_size = hidden_size
         self.output_size = output_size
         self.n_layers = n_layers
-        self.dropout = dropout
 
         # Define layers
         self.embedding = nn.Embedding(output_size, hidden_size, padding_idx=PAD_TOKEN)
-        self.embedding_dropout = nn.Dropout(dropout)
-        self.gru = nn.GRU(hidden_size, hidden_size, n_layers, dropout=dropout)
+        self.gru = nn.GRU(hidden_size, hidden_size, n_layers)
         self.concat = nn.Linear(hidden_size * 2, hidden_size)
         self.out = nn.Linear(hidden_size, output_size)
         self.LogSoftmax = nn.LogSoftmax(dim=1)
@@ -272,7 +295,6 @@ class LuongAttnDecoderRNN(nn.Module):
         # Get the embedding of the current input word (last output word)
         batch_size = input_seq.size(0)
         embedded = self.embedding(input_seq)
-        embedded = self.embedding_dropout(embedded)
         embedded = embedded.view(1, batch_size, self.hidden_size) # S=1 x B x N
 
         # Get current hidden state from input word and last hidden state
@@ -281,6 +303,7 @@ class LuongAttnDecoderRNN(nn.Module):
         # Calculate attention from current RNN state and all encoder outputs;
         # apply to encoder outputs to get weighted average
         context = self.attn(rnn_output, encoder_outputs)
+        context = context.squeeze(1)
         # context is 32 by 256
 
         # Attentional vector using the RNN hidden state and context vector
@@ -371,7 +394,7 @@ def generate_translation(encoder, decoder, sentence, max_length, target_lang, se
             decoded_words = greedy_search_batch(decoder, decoder_input, encoder_outputs, decoder_hidden, max_length)
         elif search == 'beam':
             if k == None:
-                k = 5 # since k = 2 preforms badly
+                k = 2 # since k = 2 preforms badly
             decoded_words = beam_search(decoder, decoder_input, encoder_outputs, decoder_hidden, max_length, k, target_lang) 
 
         return decoded_words
@@ -391,8 +414,9 @@ def test_model(encoder, decoder, search, test_idx_pairs, lang2, max_length):
         decoded_words = generate_translation(encoder, decoder, sent1, max_length, lang2, search=search)
         translated_predictions.append(" ".join(decoded_words))
         
-    true_labels = [pair[1] for pair in val_pairs[:len(test_idx_pairs)]]
-    
+    true_labels = [pair[1] for pair in val_pairs[:len(val_loader)]]
+    #true_labels = [pair[1] for pair in test_pairs[:len(test_idx_pairs)]]
+
     rand = random.randint(0, 100)
     print(translated_predictions[rand])
     print(true_labels[rand])
@@ -411,7 +435,12 @@ def test_model(encoder, decoder, search, test_idx_pairs, lang2, max_length):
     
 #     return bleurg
 
-
+def memReport():
+    for obj in gc.get_objects():
+        if torch.is_tensor(obj):
+            print(type(obj), obj.size())
+            print(obj)
+            break
 
 
 def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2, search, title, max_length_generation, val_every=1000, print_every=1000, plot_every=1000, learning_rate=0.0001):
@@ -421,8 +450,7 @@ def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2
     Max length generation is the max length generation you want 
     """
     start = time.time()
-    plot_losses, val_losses = [], []
-    val_losses = [] 
+    #plot_losses, val_losses = [], []
     count, print_loss_total, plot_loss_total, val_loss_total, plot_val_loss = 0, 0, 0, 0, 0 
     encoder_optimizer = torch.optim.Adadelta(encoder.parameters(), lr=learning_rate)
     decoder_optimizer = torch.optim.Adadelta(decoder.parameters(), lr=learning_rate)
@@ -430,11 +458,7 @@ def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2
     #decoder_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(decoder_optimizer, mode="min")
 
     criterion = nn.NLLLoss(ignore_index=PAD_token) # this ignores the padded token. 
-    plot_loss =[]
-    val_loss = []
     for epoch in range(n_epochs):
-        plot_loss = []
-        val_loss = []
         for step, (sent1s, sent1_lengths, sent2s, sent2_lengths) in enumerate(train_loader):
             encoder.train()
             decoder.train()
@@ -467,7 +491,7 @@ def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2
                 decoder_input = sent2_batch[:, t]
              
             loss = loss / max_trg_len.float()
-            print_loss_total += loss
+            print_loss_total += loss.item()
             count += 1
             loss.backward()
         
@@ -483,36 +507,52 @@ def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2
                                              step, step / n_epochs * 100, print_loss_avg))
                 # 42s
                 if (step+1) % val_every == 0:
-                    v_loss = test_model(encoder, decoder, search, validation_pairs, lang2, max_length=max_length_generation)
+                    with torch.no_grad():
+                        v_loss = test_model(encoder, decoder, search, validation_pairs, lang2, max_length=max_length_generation)
                     # returns bleu score
                     print("VALIDATION BLEU SCORE: "+str(v_loss))
-                    val_loss.append(v_loss)
-                plot_loss.append(print_loss_avg)
-                plot_loss_total = 0
+                    #val_losses.append(v_loss.item())
+                    current_time = time.strftime("%Y-%m-%d-%H-%M-%S")
+                    torch.save(encoder.state_dict(), "Attention_Vish_encoder_" + current_time)
+                    torch.save(decoder.state_dict(), "Attention_Vish_decoder_" + current_time)
+                    #pickle.dump(val_losses, open("val_losses_1.2_2nd_train", "wb"))
+                    print("Memory allocated: ", torch.cuda.memory_allocated(device))
 
-    current_time = time.strftime("%Y-%m-%d-%H-%M-%S")
-    torch.save(encoder.state_dict(), "Attention_encoder_" + current_time)
-    torch.save(decoder.state_dict(), "Attention_decoder_" + current_time)
-    
+                    
+                #plot_losses.append(print_loss_avg)
+                #pickle.dump(plot_losses, open("train_losses_1.2_2nd_train", "wb"))
+                #plot_loss_total = 0
+                
+             
+            del sent1s, sent1_lengths, sent2s, sent2_lengths, sent1_batch, sent2_batch, sent1_length_batch, sent2_length_batch
+            gc.collect() 
+            
     
     
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 hidden_size = 256
 encoder1 = Encoder_Batch_RNN(input_lang.n_words, hidden_size).to(device)
-# decoder1 = Decoder_Batch_2RNN(target_lang.n_words, hidden_size).to(device)
 decoder1 = LuongAttnDecoderRNN(attn_model, hidden_size, target_lang.n_words, 1).to(device)
+# encoder1.load_state_dict(torch.load("Attention_Vish_encoder_2018-12-15-04-39-04"))
+# decoder1 = Decoder_Batch_2RNN(target_lang.n_words, hidden_size).to(device)
+# decoder1.load_state_dict(torch.load("Attention_Vish_decoder_2018-12-15-04-39-04"))
+
+#bleu_score = test_model(encoder1, decoder1, "beam", test_idx_pairs, target_lang, max_length=20)
+#print(bleu_score)
+
+
 args = {
-    'n_epochs': 10,
-    'learning_rate': 0.1,
+    'n_epochs': 4,
+    'learning_rate': 2.0,
     'search': 'beam',
     'encoder': encoder1,
     'decoder': decoder1,
     'lang1': input_lang, 
     'lang2': target_lang,
     "pairs":train_idx_pairs, 
-    "validation_pairs": val_idx_pairs[:200], 
-    "title": "Training Curve for Basic 1-Directional Encoder Decoder Model With LR = 0.0001",
+    "validation_pairs": val_idx_pairs, 
+    "title": "Training Curve for Basic 1-Directional Encoder Decoder Model With LR = 1.2",
     "max_length_generation": 20, 
     "plot_every": 10, 
     "print_every": 100,
