@@ -442,6 +442,39 @@ def memReport():
             print(obj)
             break
 
+def train(sent1_batch, sent1_length_batch, sent2_batch, sent2_length_batch, encoder, decoder, encoder_optimizer,
+          decoder_optimizer, criterion):
+        
+    encoder_optimizer.zero_grad()
+    decoder_optimizer.zero_grad()
+    
+    encoder_outputs, encoder_hidden = encoder(sent1_batch, sent1_length_batch)
+    decoder_hidden = encoder_hidden
+    decoder_input = torch.LongTensor([SOS_token] * BATCH_SIZE).view(-1, 1).to(device)
+    
+    max_trg_len = max(sent2_length_batch)
+    loss = 0
+    
+    # Run through decoder one time step at a time using TEACHER FORCING=1.0
+    for t in range(max_trg_len):
+        decoder_output, decoder_hidden = decoder(
+            decoder_input, decoder_hidden, encoder_outputs
+        )
+        # decoder_output is 32 by vocab_size
+        # sent2_batch is 32 by 46
+        loss += criterion(decoder_output, sent2_batch[:, t])
+        decoder_input = sent2_batch[:, t]
+        
+    
+    loss = loss / max_trg_len.float()
+    loss.backward()
+    
+    encoder_optimizer.step()
+    decoder_optimizer.step()
+    
+    return loss.item()
+    
+    
 
 def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2, search, title, max_length_generation, val_every=1000, print_every=1000, plot_every=1000, learning_rate=0.0001):
     """
@@ -465,47 +498,21 @@ def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2
             sent1_batch, sent2_batch = sent1s.to(device), sent2s.to(device) 
             sent1_length_batch, sent2_length_batch = sent1_lengths.to(device), sent2_lengths.to(device)
             
-            encoder_optimizer.zero_grad()
-            decoder_optimizer.zero_grad()
+            loss = train(sent1_batch, sent1_length_batch, sent2_batch, sent2_length_batch, 
+                         encoder, decoder, encoder_optimizer, decoder_optimizer, criterion)
             
-            encoder_outputs, encoder_hidden = encoder(sent1_batch, sent1_length_batch)
-            # outputs is 32 by 72 by 256
-            # encoder_hidden is 1 by 32 by 256
-            
-            decoder_input = torch.LongTensor([SOS_token] * BATCH_SIZE).view(-1, 1).to(device)
-            decoder_hidden = encoder_hidden
-            # decoder_input is 32 by 1
-            # decoder_hidden is 1 by 32 by 256
-                        
-            max_trg_len = max(sent2_lengths)
-            loss = 0
-            
-            # Run through decoder one time step at a time using TEACHER FORCING=1.0
-            for t in range(max_trg_len):
-                decoder_output, decoder_hidden = decoder(
-                    decoder_input, decoder_hidden, encoder_outputs
-                )
-                # decoder_output is 32 by vocab_size
-                # sent2_batch is 32 by 46
-                loss += criterion(decoder_output, sent2_batch[:, t])
-                decoder_input = sent2_batch[:, t]
-             
-            loss = loss / max_trg_len.float()
-            print_loss_total += loss.item()
+            print_loss_total += loss
             count += 1
-            loss.backward()
-        
-            encoder_optimizer.step()
-            decoder_optimizer.step()
-            
+          
             if (step+1) % print_every == 0:
                 # lets train and plot at the same time. 
                 print_loss_avg = print_loss_total / count
                 count = 0
                 print_loss_total = 0
                 print('TRAIN SCORE %s (%d %d%%) %.4f' % (timeSince(start, step / n_epochs),
-                                             step, step / n_epochs * 100, print_loss_avg))
-                # 42s
+                                                         step, step / n_epochs * 100, print_loss_avg))
+                print("Memory allocated: ", torch.cuda.memory_allocated(device)/(1e6))
+
                 if (step+1) % val_every == 0:
                     with torch.no_grad():
                         v_loss = test_model(encoder, decoder, search, validation_pairs, lang2, max_length=max_length_generation)
@@ -516,14 +523,8 @@ def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2
                     torch.save(encoder.state_dict(), "Attention_Vish_encoder_" + current_time)
                     torch.save(decoder.state_dict(), "Attention_Vish_decoder_" + current_time)
                     #pickle.dump(val_losses, open("val_losses_1.2_2nd_train", "wb"))
-                    print("Memory allocated: ", torch.cuda.memory_allocated(device))
-
                     
-                #plot_losses.append(print_loss_avg)
-                #pickle.dump(plot_losses, open("train_losses_1.2_2nd_train", "wb"))
-                #plot_loss_total = 0
-                
-             
+                           
             del sent1s, sent1_lengths, sent2s, sent2_lengths, sent1_batch, sent2_batch, sent1_length_batch, sent2_length_batch
             gc.collect() 
             
