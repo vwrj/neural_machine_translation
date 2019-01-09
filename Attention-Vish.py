@@ -28,7 +28,7 @@ from misc import timeSince, load_cpickle_gc
 device = "cpu"
 
 
-BATCH_SIZE = 8
+BATCH_SIZE = 32
 PAD_token = 0
 PAD_TOKEN = 0
 SOS_token = 1
@@ -87,19 +87,19 @@ def language_pair_dataset_collate_function(batch):
 #    input_lang = 'vi',
 #    target_lang = 'en')
 
-#_, _, test_pairs= prepareTrainData(
-#    "iwslt-vi-en-processed/test.vi",
-#    "iwslt-vi-en-processed/test.en",
-#    input_lang = 'vi',
-#    target_lang = 'en')
+_, _, test_pairs= prepareTrainData(
+    "iwslt-vi-en-processed/test.vi",
+    "iwslt-vi-en-processed/test.en",
+    input_lang = 'vi',
+    target_lang = 'en')
 
 input_lang = load_cpickle_gc("input_lang_vi")
 target_lang = load_cpickle_gc("target_lang_en")
 
-#test_idx_pairs = []
-#for x in test_pairs:
-#    indexed = list(tensorsFromPair(x, input_lang, target_lang))
-#    test_idx_pairs.append(indexed)
+test_idx_pairs = []
+for x in test_pairs:
+    indexed = list(tensorsFromPair(x, input_lang, target_lang))
+    test_idx_pairs.append(indexed)
 
 train_idx_pairs = load_cpickle_gc("train_vi_en_idx_pairs")
 train_idx_pairs = train_idx_pairs[:-5]
@@ -145,11 +145,11 @@ val_loader = torch.utils.data.DataLoader(dataset=val_dataset,
                                            collate_fn=language_pair_dataset_collate_function,
                                           )
 
-#test_dataset = LanguagePairDataset(test_idx_pairs)
-#val_loader = torch.utils.data.DataLoader(dataset=test_dataset, 
-#                                           batch_size=1, 
-#                                           collate_fn=language_pair_dataset_collate_function,
-#                                          )
+test_dataset = LanguagePairDataset(test_idx_pairs)
+test_loader = torch.utils.data.DataLoader(dataset=test_dataset, 
+                                           batch_size=1, 
+                                           collate_fn=language_pair_dataset_collate_function,
+                                          )
 
 class Encoder_Batch_RNN(nn.Module):
     def __init__(self, input_size, hidden_size):
@@ -200,10 +200,10 @@ class Encoder_Batch_Bidir_RNN(nn.Module):
         super(Encoder_Batch_Bidir_RNN, self).__init__()
         self.hidden_size = hidden_size
         self.embedding = nn.Embedding(input_size, hidden_size)
-        self.gru = nn.GRU(hidden_size, hidden_size, batch_first=True, bidirectional=True)
+        self.gru = nn.GRU(hidden_size, hidden_size, batch_first=True, bidirectional=True, num_layers=2, dropout=0.1)
         
     def init_hidden(self, batch_size):
-        return torch.zeros(2, batch_size, self.hidden_size, device=device)
+        return torch.zeros(4, batch_size, self.hidden_size, device=device)
 
     def forward(self, sents, sent_lengths):
         '''
@@ -235,6 +235,13 @@ class Encoder_Batch_Bidir_RNN(nn.Module):
         change_it_back = [x for _, x in sorted(zip(descending_indices, range(len(descending_indices))))]
         self.hidden = torch.index_select(self.hidden, 1, torch.LongTensor(change_it_back).to(device))  
         rnn_out = torch.index_select(rnn_out, 0, torch.LongTensor(change_it_back).to(device)) 
+ 
+        # self.hidden is 4 by 8 by 256
+        # let's only use the top-most layer for the encoder output
+        # so we want to return 8 by 512
+        hidden_top = torch.cat((self.hidden[2], self.hidden[3]), dim=1)
+        hidden_bottom = torch.cat((self.hidden[0], self.hidden[1]), dim=1)
+        self.hidden = torch.stack((hidden_top, hidden_bottom))
         
         return rnn_out, self.hidden
 
@@ -254,19 +261,29 @@ class Attn(nn.Module):
             self.attn = nn.Linear(self.hidden_size * 2, hidden_size)
             self.v = nn.Parameter(torch.FloatTensor(1, hidden_size))
 
-    def forward(self, hidden, encoder_outputs):
+    def forward(self, hidden, encoder_outputs, attn_mask):
 
         # Create variable to store attention energies
-        # hidden is 32 by 256
-        # encoder_outputs is 32 by 72 by 256
-        hidden = hidden[0]
+        # hidden is 16 by 512
+        # encoder_outputs is 16 by 72 by 512
+        
+        # this just uses the top layer of the 2-layer decoder. 
+        # okay?
+        hidden = hidden.squeeze(0)
         batch_size = hidden.size()[0]
         attn_energies = []
         for i in range(batch_size):
             attn_energies.append(self.score(hidden[i], encoder_outputs[i]))
         
+        attn_energies = torch.stack(attn_energies).squeeze(0)
         # attn_energies is 32 by 72
-        attn_energies = self.softmax(torch.stack(attn_energies))
+        if attn_mask is not None:
+            attn_energies = attn_mask * attn_energies
+            attn_energies[attn_energies == 0] = -1e10
+        # i want to mask the attention energies
+        if attn_mask is None:
+            attn_energies = attn_energies.view(1, -1)
+        attn_energies = self.softmax(attn_energies)
         
         context_vectors = []
         for i in range(batch_size):
@@ -291,10 +308,10 @@ class Attn(nn.Module):
             # encoder_output is 256 by 22
             # encoder_output = torch.transpose(encoder_output, 0, 1)
             hidden = hidden.view(1, -1)
-            a = self.attn(encoder_output)
-            a = torch.transpose(a, 0, 1)
-            energy = torch.matmul(hidden, a)
-            return energy
+            transformed = self.attn(encoder_output)
+            transformed = torch.transpose(transformed, 0, 1)
+            energy = torch.matmul(hidden, transformed)
+            return energy[0]
         
         elif self.method == 'concat':
             len_encoder_output = encoder_output.size()[1]
@@ -313,7 +330,7 @@ class Attn(nn.Module):
         
         
 class LuongAttnDecoderRNN(nn.Module):
-    def __init__(self, attn_model, hidden_size, output_size, n_layers=1):
+    def __init__(self, attn_model, hidden_size, output_size, n_layers=2):
         super(LuongAttnDecoderRNN, self).__init__()
 
         # Keep for reference
@@ -323,8 +340,8 @@ class LuongAttnDecoderRNN(nn.Module):
         self.n_layers = n_layers
 
         # Define layers
-        self.embedding = nn.Embedding(output_size, hidden_size, padding_idx=PAD_TOKEN)
-        self.gru = nn.GRU(hidden_size, 2*hidden_size, n_layers)
+        self.embedding = nn.Embedding(output_size, 2*hidden_size, padding_idx=PAD_TOKEN)
+        self.gru = nn.GRU(2*hidden_size, 2*hidden_size, num_layers = n_layers)
         self.concat = nn.Linear(hidden_size * 4, hidden_size*2)
         self.out = nn.Linear(hidden_size*2, output_size)
         self.LogSoftmax = nn.LogSoftmax(dim=1)
@@ -333,27 +350,31 @@ class LuongAttnDecoderRNN(nn.Module):
         if attn_model != 'none':
             self.attn = Attn(attn_model, hidden_size)
 
-    def forward(self, input_seq, last_hidden, encoder_outputs):
+    def forward(self, input_seq, last_hidden, encoder_outputs, attn_mask):
         # Note: we run this one step at a time
 
+        # input_seq: 16 by 1
+        # last_hidden: 2 by 16 by 512 
+        # encoder_outputs: 16 by 57 by 512 
         # Get the embedding of the current input word (last output word)
         batch_size = input_seq.size(0)
+        #if batch_size == 1:
+        #    pdb.set_trace()
         embedded = self.embedding(input_seq)
-        embedded = embedded.view(1, batch_size, self.hidden_size) # S=1 x B x N
+        embedded = embedded.view(1, batch_size, -1)
 
         # Get current hidden state from input word and last hidden state
-        last_hidden = last_hidden.view(1, batch_size, -1)
         rnn_output, hidden = self.gru(embedded, last_hidden)
 
         # Calculate attention from current RNN state and all encoder outputs;
         # apply to encoder outputs to get weighted average
-        context = self.attn(rnn_output, encoder_outputs)
-        context = context.squeeze(1)
+        context = self.attn(rnn_output, encoder_outputs, attn_mask)
+        context = context.view(batch_size, 2*hidden_size)
         # context is 32 by 256
 
         # Attentional vector using the RNN hidden state and context vector
         # concatenated together (Luong eq. 5)
-        rnn_output = rnn_output.squeeze(0) # S=1 x B x N -> B x N
+        rnn_output = rnn_output.view(batch_size, 2*hidden_size) # S=1 x B x N -> B x N
         # rnn_output is 32 by 256
         concat_input = torch.cat((rnn_output, context), 1)
         concat_output = torch.tanh(self.concat(concat_input))
@@ -395,7 +416,8 @@ def beam_search(decoder, decoder_input, encoder_outputs, hidden, max_length, k, 
                 completed_translations.append((c_sequence, c_score))
                 k = k - 1
             else:
-                next_word_probs, hidden = decoder(torch.cuda.LongTensor([c_sequence[-1]]).view(1, 1), torch.cuda.FloatTensor(c_hidden), encoder_outputs)
+                # pdb.set_trace()
+                next_word_probs, hidden = decoder(torch.cuda.LongTensor([c_sequence[-1]]).view(1, 1), torch.cuda.FloatTensor(c_hidden), encoder_outputs, attn_mask = None)
                 next_word_probs = next_word_probs[0]
                 # in the worst-case, one sequence will have the highest k probabilities
                 # so to save computation, only grab the k highest_probability from each candidate sequence
@@ -445,26 +467,31 @@ def generate_translation(encoder, decoder, sentence, max_length, target_lang, se
         return decoded_words
     
     
-def test_model(encoder, decoder, search, test_idx_pairs, lang2, max_length):
+def test_model(encoder, decoder, search, test_idx_pairs, lang2, max_length, which = None):
     # for test, you only need the lang1 words to be tokenized,
     # lang2 words is the true labels
     encoder.eval()
     decoder.eval()
     
     translated_predictions = []
-    for step, (sent1, sent1_length, sent2, sent2_length) in enumerate(val_loader):
+    if which == "test":
+        loader = test_loader
+        true_labels = [pair[1] for pair in test_pairs[:len(test_idx_pairs)]]
+    else:
+        loader = val_loader
+        true_labels = [pair[1] for pair in val_pairs[:len(val_loader)]]
+
+    for step, (sent1, sent1_length, sent2, sent2_length) in enumerate(loader):
         sent1, sent2 = sent1.to(device), sent2.to(device) 
         sent1_length, sent2_length = sent1_length.to(device), sent2_length.to(device)
         
         decoded_words = generate_translation(encoder, decoder, sent1, max_length, lang2, search=search)
-        translated_predictions.append(" ".join(decoded_words))
-        
-    true_labels = [pair[1] for pair in val_pairs[:len(val_loader)]]
-    #true_labels = [pair[1] for pair in test_pairs[:len(test_idx_pairs)]]
+        translated_predictions.append(" ".join(decoded_words).replace(" &apos;", "'").replace('SOS ', '').replace('EOS', '').replace('. ', '.').replace(' ,', ','))
 
-    rand = random.randint(0, 100)
-    print(translated_predictions[rand])
-    print(true_labels[rand])
+    rands = random.sample(range(0, 100), 5)
+    for r in rands:
+        print(translated_predictions[r])
+        print(true_labels[r])
     bleurg = calculate_bleu(translated_predictions, true_labels)
     return bleurg
 
@@ -475,24 +502,38 @@ def memReport():
             print(obj)
             break
 
+def sequence_mask(sequence_length, device = 'cuda'):
+    max_len = sequence_length.max().item()
+    batch_size = sequence_length.size(0)
+    seq_range = torch.arange(0, max_len).long()
+    seq_range_expand = seq_range.unsqueeze(0).repeat([batch_size,1])
+    seq_range_expand = seq_range_expand.to(device)
+    seq_length_expand = (sequence_length.unsqueeze(1)
+                         .expand_as(seq_range_expand))
+    return (seq_range_expand < seq_length_expand).float()
+
+
 def train(sent1_batch, sent1_length_batch, sent2_batch, sent2_length_batch, encoder, decoder, encoder_optimizer,
           decoder_optimizer, criterion):
         
+    batch_size = sent1_batch.size()[0]
     encoder_optimizer.zero_grad()
     decoder_optimizer.zero_grad()
     
     encoder_outputs, encoder_hidden = encoder(sent1_batch, sent1_length_batch)
-    encoder_hidden = torch.cat((encoder_hidden[0, :, :], encoder_hidden[1, :, :]), 1)
+    # the below code was used for a 1-layer bidirectional GRU
+    # encoder_hidden = torch.cat((encoder_hidden[0, :, :], encoder_hidden[1, :, :]), 1)
     decoder_hidden = encoder_hidden
-    decoder_input = torch.LongTensor([SOS_token] * BATCH_SIZE).view(-1, 1).to(device)
+    decoder_input = torch.LongTensor([SOS_token] * batch_size).view(-1, 1).to(device)
     
     max_trg_len = max(sent2_length_batch)
     loss = 0
+    attn_mask = sequence_mask(sent1_length_batch)
     
     # Run through decoder one time step at a time using TEACHER FORCING=1.0
     for t in range(max_trg_len):
         decoder_output, decoder_hidden = decoder(
-            decoder_input, decoder_hidden, encoder_outputs
+            decoder_input, decoder_hidden, encoder_outputs, attn_mask
         )
         # decoder_output is 32 by vocab_size
         # sent2_batch is 32 by 46
@@ -503,8 +544,8 @@ def train(sent1_batch, sent1_length_batch, sent2_batch, sent2_length_batch, enco
     loss = loss / max_trg_len.float()
     loss.backward()
 
-    torch.nn.utils.clip_grad_norm_(encoder.parameters(), 1.0)
-    torch.nn.utils.clip_grad_norm_(decoder.parameters(), 1.0)
+    torch.nn.utils.clip_grad_norm_(encoder.parameters(), 2.1)
+    torch.nn.utils.clip_grad_norm_(decoder.parameters(), 2.1)
     
     encoder_optimizer.step()
     decoder_optimizer.step()
@@ -512,22 +553,13 @@ def train(sent1_batch, sent1_length_batch, sent2_batch, sent2_length_batch, enco
     return loss.item()
     
     
-
-def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2, search, title, max_length_generation, val_every=1000, print_every=1000, plot_every=1000, learning_rate=0.0001):
-    """
-    lang1 is the Lang object for language 1 
-    Lang2 is the Lang object for language 2
-    Max length generation is the max length generation you want 
-    """
+def trainIters(encoder, decoder, n_epochs, validation_pairs, lang1, lang2, search, title, max_length_generation, print_every, val_every, learning_rate):
     start = time.time()
-    #plot_losses, val_losses = [], []
-    count, print_loss_total, plot_loss_total, val_loss_total, plot_val_loss = 0, 0, 0, 0, 0 
-    encoder_optimizer = torch.optim.Adadelta(encoder.parameters(), lr=learning_rate)
-    decoder_optimizer = torch.optim.Adadelta(decoder.parameters(), lr=learning_rate)
-    #encoder_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(encoder_optimizer, mode="min")
-    #decoder_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(decoder_optimizer, mode="min")
-
+    count, print_loss_total = 0, 0
+    encoder_optimizer = torch.optim.Adam(encoder.parameters(), lr=learning_rate)
+    decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=5*learning_rate)
     criterion = nn.NLLLoss(ignore_index=PAD_token) # this ignores the padded token. 
+
     for epoch in range(n_epochs):
         for step, (sent1s, sent1_lengths, sent2s, sent2_lengths) in enumerate(train_loader):
             encoder.train()
@@ -548,17 +580,15 @@ def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2
                 print_loss_total = 0
                 print('TRAIN SCORE %s (%d %d%%) %.4f' % (timeSince(start, step / n_epochs),
                                                          step, step / n_epochs * 100, print_loss_avg))
-                print("Memory allocated: ", torch.cuda.memory_allocated(device)/(1e6))
+                print("Memory allocated (mb): ", torch.cuda.memory_allocated(device)/(1e6))
 
                 if (step+1) % val_every == 0:
                     with torch.no_grad():
                         bleu_score = test_model(encoder, decoder, search, validation_pairs, lang2, max_length=max_length_generation)
                     # returns bleu score
                     print("VALIDATION BLEU SCORE: "+str(bleu_score))
-                    #val_losses.append(v_loss.item())
                     torch.save(encoder.state_dict(), "Attention_Vish_encoder_latest")
                     torch.save(decoder.state_dict(), "Attention_Vish_decoder_latest")
-                    #pickle.dump(val_losses, open("val_losses_1.2_2nd_train", "wb"))
                     
                            
             del sent1s, sent1_lengths, sent2s, sent2_lengths, sent1_batch, sent2_batch, sent1_length_batch, sent2_length_batch
@@ -568,32 +598,30 @@ def trainIters(encoder, decoder, n_epochs, pairs, validation_pairs, lang1, lang2
     
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-hidden_size = 256
+hidden_size = 350
 encoder1 = Encoder_Batch_Bidir_RNN(input_lang.n_words, hidden_size).to(device)
-decoder1 = LuongAttnDecoderRNN(attn_model, hidden_size, target_lang.n_words, 1).to(device)
+decoder1 = LuongAttnDecoderRNN(attn_model, hidden_size, target_lang.n_words).to(device)
 encoder1.load_state_dict(torch.load("Attention_Vish_encoder_latest"))
 # decoder1 = Decoder_Batch_2RNN(target_lang.n_words, hidden_size).to(device)
 decoder1.load_state_dict(torch.load("Attention_Vish_decoder_latest"))
 
-#bleu_score = test_model(encoder1, decoder1, "beam", test_idx_pairs, target_lang, max_length=20)
-#print(bleu_score)
+bleu_score = test_model(encoder1, decoder1, "beam", test_idx_pairs, target_lang, max_length=25, which="test")
+print(bleu_score)
 
 
 args = {
     'n_epochs': 4,
-    'learning_rate': 0.1,
+    'learning_rate': 0.000003,
     'search': 'beam',
     'encoder': encoder1,
     'decoder': decoder1,
     'lang1': input_lang, 
     'lang2': target_lang,
-    "pairs":train_idx_pairs, 
     "validation_pairs": val_idx_pairs, 
     "title": "Training Curve for Basic 1-Directional Encoder Decoder Model With LR = 1.2",
-    "max_length_generation": 20, 
-    "plot_every": 10, 
+    "max_length_generation": 25, 
     "print_every": 100,
-    "val_every": 500
+    "val_every": 1000
 }
 
 """
@@ -603,4 +631,4 @@ and use the Adadelta optimizer
 """
 print(BATCH_SIZE)
 
-trainIters(**args)
+#trainIters(**args)
