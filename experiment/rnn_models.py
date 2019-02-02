@@ -1,0 +1,132 @@
+import torch
+import torch.nn as nn
+from torch import optim
+import torch.nn.functional as F
+import config
+from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence
+
+class Encoder(nn.Module):
+
+    def __init__(self, args, padding_idx, src_vocab_size):
+        super(Encoder, self).__init__()
+        self.args = args
+        self.num_directions = 2 if args.bidirectional else 1
+
+        self.embedding = nn.Embedding(src_vocab_size, args.embedding_size, padding_idx = padding_idx)
+        self.rnn = nn.GRU(
+                input_size = args.embedding_size,
+                hidden_size = args.hidden_size,
+                num_layers = args.num_encoder_layers,
+                #dropout = args.dropout,
+                bidirectional = args.bidirectional
+                )
+
+    def forward(self, hidden, x, lengths):
+        # print("x.shape", x.shape) # Size([32, 16]) 
+        # dimension of x: (seq_len, batch, input_size)
+        x = self.embedding(x)
+        # print("embedded shape", x.shape) # Size([32, 16, 256])
+        # dimension of x after embedding: (seq_len, batch, embedding_size)
+
+        x = pack_padded_sequence(x, lengths)
+        x, hidden = self.rnn(x, hidden)
+        x, output_lengths = pad_packed_sequence(x)
+        
+        # print("after encoder shape", x.shape) # Size([32, 16, 128])
+        # dimension of x after encoder: (seq_len, batch, hidden_size)
+        # print("encoder hidden shape", self.hidden.shape) # Size([1, 16, 128])
+
+        if self.num_directions == 2:
+            x = x[:, :, :self.args.hidden_size] + x[:, :, self.args.hidden_size:]
+        return x, hidden
+
+    def random_init_hidden(self, device, current_batch_size):
+        # only needed for encoder, since decoder's first hidden state is the output of encoder
+
+        hidden = torch.zeros(
+                self.args.num_encoder_layers * self.num_directions,
+                current_batch_size,
+                self.args.hidden_size,
+                device=device
+                )
+
+        # https://r2rt.com/non-zero-initial-states-for-recurrent-neural-networks.html
+        # TODO: try not doing the below, just doing zeros
+        nn.init.xavier_normal_(hidden)
+
+        return hidden
+
+
+class Attn(nn.Module):
+
+    def __init__(self, method, hidden_size):
+        super(Attn, self).__init__()
+
+        self.method = method
+        self.hidden_size = hidden_size
+
+        if self.method == 'general':
+            self.attn = nn.Linear(self.hidden_size, hidden_size)
+
+        elif self.method == 'concat':
+            self.attn = nn.Linear(self.hidden_size * 2, hidden_size)
+            self.v = nn.Parameter(torch.FloatTensor(1, hidden_size))
+
+    def forward(self, hidden, encoder_outputs_a, encoder_outputs_c=None):
+        
+        if encoder_outputs_c is None:
+            encoder_outputs_c = encoder_outputs_a
+
+        energy = self.score(hidden, encoder_outputs_a)
+        score = F.softmax(energy, dim = 1).view(1, self.batch_size, -1) # works, but bad code. 
+        context_vector = torch.bmm(score.transpose(1, 0), encoder_outputs_c.transpose(1, 0))
+        return context_vector, score
+
+    def score(self, hidden, encoder_output):
+        '''
+        Args
+            hidden: size 1 x B x hidden_size
+            encoder_output: size N x B x hidden_size
+        Return
+            energy: size B x N x 1
+
+        torch.bmm performs a batch matrix-matrix product. 
+        torch.bmm(batch1, batch2) 
+        if batch1 is (B x N x M) and batch2 is (B x M x P), then
+        output will be (B x N x P). 
+        '''
+        self.batch_size = hidden.shape[1]
+        if self.method == 'dot':
+            energy = torch.bmm(encoder_output.transpose(1, 0), hidden.squeeze(0).unsqueeze(2))
+            return energy
+
+        elif self.method == 'general':
+            energy = torch.bmm(encoder_output.transpose(1, 0), self.attn(hidden.squeeze(0)).unsqueeze(2))
+            return energy
+
+
+class LuongAttnDecoderRNN(nn.Module):
+    def __init__(self, args, trg_padding_idx, output_size, device=None):
+        super(LuongAttnDecoderRNN, self(.__init__()
+        
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+        

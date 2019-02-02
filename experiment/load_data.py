@@ -30,7 +30,7 @@ class TranslationDataset(data.Dataset):
                 src_line, trg_line = src_line.strip(), trg_line.strip()
                 if src_line != '' and trg_line != '':
                     examples.append(data.Example.fromlist(
-                        [src_line, trg_line, i], fields)
+                        [src_line, trg_line, i], fields))
 
         super(TranslationDataset, self).__init__(examples, fields, **kwargs)
 
@@ -50,21 +50,70 @@ class TranslationDataset(data.Dataset):
         if path is None:
             path = cls.download(root)
 
-            train_data = None if train is None else cls(
-                os.path.join(path, train), exts, fields, **kwargs)
-            val_data = None if validation is None else cls(
-                os.path.join(path, validation), exts, fields, **kwargs)
-            test_data = None if test is None else cls(
-                os.path.join(path, test), exts, fields, **kwargs)
+        train_data = None if train is None else cls(
+            os.path.join(path, train), exts, fields, **kwargs)
+        val_data = None if validation is None else cls(
+            os.path.join(path, validation), exts, fields, **kwargs)
+        test_data = None if test is None else cls(
+            os.path.join(path, test), exts, fields, **kwargs)
 
-            return tuple(d for d in (train_data, val_data, test_data)
-                if d is not None)
-
+        return tuple(d for d in (train_data, val_data, test_data)
+            if d is not None)
             
-    def load_data(args):
+    
+def transform(token):
+    if token == '&amp;':
+        return '&'
+    if token == '&quot;':
+        return '"'
+    if token == '&apos;':
+        return "'"
+    if token == '&#91;':
+        return '('
+    if token == '&#93;':
+        return ')'
+    if token.startswith('&apos;'):
+        return "'" + token[6:]
+    return token
 
+def tokenize(line):
+    token_list = str.split(line)
+    return [transform_v3(tok) for tok in token_list]
+            
+def load_data(args):
+    
+    SRC = data.Field(
+            tokenize=tokenize,
+            init_token='SOS',
+            eos_token='EOS',
+            include_lengths=True,
+            fix_length=args.max_sentence_length
+            )
 
+    EN = data.Field(
+            tokenize=tokenize,
+            init_token='SOS',
+            eos_token='EOS',
+            lower=True,
+            include_lengths=True,
+            fix_length=args.max_sentence_length
+            )
 
+    train, val, test = TranslationDataset.splits(
+            path=args.data,
+            train='train', validation='dev', test='test',
+            exts=('.tok.vi', '.tok.en'), fields=(SRC, EN)
+            )
+
+    SRC.build_vocab(train.src, min_freq=args.min_freq, max_size=args.max_vocab_size)
+    EN.build_vocab(train.trg, min_freq=args.min_freq, max_size=args.max_vocab_size)
+
+    print("most common source vocabs:", SRC.vocab.freqs.most_common(10))
+    print("source vocab size:", len(SRC.vocab))
+    print("most common english vocabs:", EN.vocab.freqs.most_common(10))
+    print("english vocab size:", len(EN.vocab))
+
+    return train, val, test, SRC, EN
 
 
 
