@@ -107,7 +107,58 @@ class Attn(nn.Module):
 
 class LuongAttnDecoderRNN(nn.Module):
     def __init__(self, args, trg_padding_idx, output_size, device=None):
-        super(LuongAttnDecoderRNN, self(.__init__()
+        super(LuongAttnDecoderRNN, self).__init__()
+
+        self.attn_model = args.attn_model
+        self.hidden_size = args.hidden_size
+        self.output_size = output_size
+        self.n_layers = args.num_decoder_layers
+        self.relu = args.relu
+        self.embedding_size = args.embedding_size
+        self.device = device
+
+        # Define layers
+        self.embedding = nn.Embedding(
+                self.output_size,
+                args.embedding_size, 
+                padding_idx = trg_padding_idx
+                )
+
+        self.gru = nn.Gru(
+                input_size = args.embedding_size,
+                hidden_size = args.hidden_size,
+                num_layers = self.n_layers
+                )
+
+        self.concat = nn.Linear(self.hidden_size * 2, self.hidden_size)
+        self.out = nn.Linear(self.hidden_size, self.output_size)
+
+        self.attn = Attn(self.attn_model, self.hidden_size)
+
+    def forward(self, hidden, input_seq, encoder_outputs_a, encoder_outputs_c=None, src_lengths=None):
+        # note: we run this one step at a time
+        if encoder_outputs_c is None:
+            encoder_outputs_c = encoder_outputs_a
+
+        # Get embedding of current input word (last output word)
+        batch_size = input_seq.size(0)
+        embedded = self.embedding(input_seq)
+        embedded = embedded.view(1, batch_size, self.embedding_size) # S=1 x B x N
+
+        # Get current hidden state from input word and last hidden state
+        rnn_output, hidden = self.gru(embedded, hidden)
+        
+        # Calculate attention from current RNN hidden state and all encoder outputs;
+        context, attn_weights = self.attn(rnn_output, encoder_outputs_a, encoder_outputs_c)
+
+        rnn_output = rnn_output.squeeze(0) # S=1 x B x N --> B x N
+        context = context.squeeze(1) # B x S=1 x N --> B x N
+        concat_input = torch.cat((rnn_output, context), 1)
+        concat_output = F.tanh(self.concat(concat_input))
+
+        # Finally, predict next token (Luong eq. 6, without softmax)
+        output = self.out(concat_output)
+        return output, attn_weights, hidden
         
 
 
