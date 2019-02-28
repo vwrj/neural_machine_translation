@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 from torch import optim
 import torch.nn.functional as F
-import config
 from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence
 
 class Encoder(nn.Module):
@@ -22,19 +21,20 @@ class Encoder(nn.Module):
                 )
 
     def forward(self, hidden, x, lengths):
-        # print("x.shape", x.shape) # Size([32, 16]) 
+        print("x.shape", x.shape) # Size([32, 16]) 
+        print("lengths", lengths)
         # dimension of x: (seq_len, batch, input_size)
         x = self.embedding(x)
-        # print("embedded shape", x.shape) # Size([32, 16, 256])
+        print("embedded: ", x.shape) # Size([32, 16, 256])
         # dimension of x after embedding: (seq_len, batch, embedding_size)
 
         x = pack_padded_sequence(x, lengths)
         x, hidden = self.rnn(x, hidden)
         x, output_lengths = pad_packed_sequence(x)
         
-        # print("after encoder shape", x.shape) # Size([32, 16, 128])
+        print("after encoder, encoder_outputs: ", x.shape) # Size([32, 16, 128])
         # dimension of x after encoder: (seq_len, batch, hidden_size)
-        # print("encoder hidden shape", self.hidden.shape) # Size([1, 16, 128])
+        print("encoder hidden: ", hidden.shape) # Size([1, 16, 128])
 
         if self.num_directions == 2:
             x = x[:, :, :self.args.hidden_size] + x[:, :, self.args.hidden_size:]
@@ -72,14 +72,11 @@ class Attn(nn.Module):
             self.attn = nn.Linear(self.hidden_size * 2, hidden_size)
             self.v = nn.Parameter(torch.FloatTensor(1, hidden_size))
 
-    def forward(self, hidden, encoder_outputs_a, encoder_outputs_c=None):
-        
-        if encoder_outputs_c is None:
-            encoder_outputs_c = encoder_outputs_a
+    def forward(self, hidden, encoder_outputs):
 
-        energy = self.score(hidden, encoder_outputs_a)
+        energy = self.score(hidden, encoder_outputs)
         score = F.softmax(energy, dim = 1).view(1, self.batch_size, -1) # works, but bad code. 
-        context_vector = torch.bmm(score.transpose(1, 0), encoder_outputs_c.transpose(1, 0))
+        context_vector = torch.bmm(score.transpose(1, 0), encoder_outputs.transpose(1, 0))
         return context_vector, score
 
     def score(self, hidden, encoder_output):
@@ -113,7 +110,6 @@ class LuongAttnDecoderRNN(nn.Module):
         self.hidden_size = args.hidden_size
         self.output_size = output_size
         self.n_layers = args.num_decoder_layers
-        self.relu = args.relu
         self.embedding_size = args.embedding_size
         self.device = device
 
@@ -124,7 +120,7 @@ class LuongAttnDecoderRNN(nn.Module):
                 padding_idx = trg_padding_idx
                 )
 
-        self.gru = nn.Gru(
+        self.gru = nn.GRU(
                 input_size = args.embedding_size,
                 hidden_size = args.hidden_size,
                 num_layers = self.n_layers
@@ -135,10 +131,7 @@ class LuongAttnDecoderRNN(nn.Module):
 
         self.attn = Attn(self.attn_model, self.hidden_size)
 
-    def forward(self, hidden, input_seq, encoder_outputs_a, encoder_outputs_c=None, src_lengths=None):
-        # note: we run this one step at a time
-        if encoder_outputs_c is None:
-            encoder_outputs_c = encoder_outputs_a
+    def forward(self, hidden, input_seq, encoder_outputs, src_lengths=None):
 
         # Get embedding of current input word (last output word)
         batch_size = input_seq.size(0)
@@ -149,7 +142,7 @@ class LuongAttnDecoderRNN(nn.Module):
         rnn_output, hidden = self.gru(embedded, hidden)
         
         # Calculate attention from current RNN hidden state and all encoder outputs;
-        context, attn_weights = self.attn(rnn_output, encoder_outputs_a, encoder_outputs_c)
+        context, attn_weights = self.attn(rnn_output, encoder_outputs)
 
         rnn_output = rnn_output.squeeze(0) # S=1 x B x N --> B x N
         context = context.squeeze(1) # B x S=1 x N --> B x N

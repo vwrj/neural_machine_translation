@@ -11,7 +11,7 @@ class TranslationDataset(data.Dataset):
     def sort_key(ex):
         return data.interleave_keys(len(ex.src), len(ex.trg))
         # not sure what this does...
-    def __init__(self, path, exts, field, **kwargs):
+    def __init__(self, path, exts, fields, **kwargs):
         """ 
         Arguments:
             path: common prefix of path to the data files for both languages. 
@@ -78,7 +78,7 @@ def transform(token):
 
 def tokenize(line):
     token_list = str.split(line)
-    return [transform_v3(tok) for tok in token_list]
+    return [transform(tok) for tok in token_list]
             
 def load_data(args):
     
