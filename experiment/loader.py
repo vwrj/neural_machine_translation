@@ -82,6 +82,9 @@ def tokenize(line):
             
 def load_data(args):
     
+    # First you define Fields, which are 'Columns', which have your pre-processing baked in. 
+    # Then you call Dataset.split which splits your raw data into train/val/test datasets. 
+    # Then you call Field.build_vocab, which actually goes through the train data and pre-processes it. Maps each word to an index, pads it, appends SOS + EOS. 
     SRC = data.Field(
             tokenize=tokenize,
             init_token='SOS',

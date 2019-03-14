@@ -21,20 +21,20 @@ class Encoder(nn.Module):
                 )
 
     def forward(self, hidden, x, lengths):
-        print("x.shape", x.shape) # Size([32, 16]) 
-        print("lengths", lengths)
+        # x.shape: Size([32, 16]) 
         # dimension of x: (seq_len, batch, input_size)
         x = self.embedding(x)
-        print("embedded: ", x.shape) # Size([32, 16, 256])
+        # x.shape: Size([32, 16, 256])
         # dimension of x after embedding: (seq_len, batch, embedding_size)
 
         x = pack_padded_sequence(x, lengths)
         x, hidden = self.rnn(x, hidden)
         x, output_lengths = pad_packed_sequence(x)
         
-        print("after encoder, encoder_outputs: ", x.shape) # Size([32, 16, 128])
+        print(x.shape)
+        # x.shape: Size([32, 16, 128])
         # dimension of x after encoder: (seq_len, batch, hidden_size)
-        print("encoder hidden: ", hidden.shape) # Size([1, 16, 128])
+        # hidden.shape: Size([1, 16, 128])
 
         if self.num_directions == 2:
             x = x[:, :, :self.args.hidden_size] + x[:, :, self.args.hidden_size:]
