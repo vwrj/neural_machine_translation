@@ -74,6 +74,7 @@ class Attn(nn.Module):
 
     def forward(self, hidden, encoder_outputs):
 
+        
         energy = self.score(hidden, encoder_outputs)
         score = F.softmax(energy, dim = 1).view(1, self.batch_size, -1) # works, but bad code. 
         context_vector = torch.bmm(score.transpose(1, 0), encoder_outputs.transpose(1, 0))
@@ -131,7 +132,7 @@ class LuongAttnDecoderRNN(nn.Module):
 
         self.attn = Attn(self.attn_model, self.hidden_size)
 
-    def forward(self, hidden, input_seq, encoder_outputs, src_lengths=None):
+    def forward(self, hidden, input_seq, encoder_outputs):
 
         # Get embedding of current input word (last output word)
         batch_size = input_seq.size(0)
