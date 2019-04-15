@@ -21,20 +21,12 @@ class Encoder(nn.Module):
                 )
 
     def forward(self, hidden, x, lengths):
-        # x.shape: Size([32, 16]) 
-        # dimension of x: (seq_len, batch, input_size)
+
         x = self.embedding(x)
-        # x.shape: Size([32, 16, 256])
-        # dimension of x after embedding: (seq_len, batch, embedding_size)
 
         x = pack_padded_sequence(x, lengths)
         x, hidden = self.rnn(x, hidden)
         x, output_lengths = pad_packed_sequence(x)
-        
-        print(x.shape)
-        # x.shape: Size([32, 16, 128])
-        # dimension of x after encoder: (seq_len, batch, hidden_size)
-        # hidden.shape: Size([1, 16, 128])
 
         if self.num_directions == 2:
             x = x[:, :, :self.args.hidden_size] + x[:, :, self.args.hidden_size:]
@@ -73,8 +65,7 @@ class Attn(nn.Module):
             self.v = nn.Parameter(torch.FloatTensor(1, hidden_size))
 
     def forward(self, hidden, encoder_outputs):
-
-        
+      
         energy = self.score(hidden, encoder_outputs)
         score = F.softmax(energy, dim = 1).view(1, self.batch_size, -1) # works, but bad code. 
         context_vector = torch.bmm(score.transpose(1, 0), encoder_outputs.transpose(1, 0))
@@ -90,8 +81,7 @@ class Attn(nn.Module):
 
         torch.bmm performs a batch matrix-matrix product. 
         torch.bmm(batch1, batch2) 
-        if batch1 is (B x N x M) and batch2 is (B x M x P), then
-        output will be (B x N x P). 
+        if batch1 is (B x N x M) and batch2 is (B x M x P), then output will be (B x N x P). 
         '''
         self.batch_size = hidden.shape[1]
         if self.method == 'dot':
@@ -140,6 +130,9 @@ class LuongAttnDecoderRNN(nn.Module):
         embedded = embedded.view(1, batch_size, self.embedding_size) # S=1 x B x N
 
         # Get current hidden state from input word and last hidden state
+        # input_seq is: (2, 2, ..., 2) list of SOS tokens, batch-sized. 
+        # embedded is: (1, 32, 256) --- (seq_len, batch_size, embedding_size)
+        # hidden is: (2, 32, 256) --- (number_of_layers, batch_size, hidden_size)
         rnn_output, hidden = self.gru(embedded, hidden)
         
         # Calculate attention from current RNN hidden state and all encoder outputs;
@@ -159,7 +152,24 @@ class LuongAttnDecoderRNN(nn.Module):
 
 
 
+#     def forward(self, hidden, x, lengths):
+#         # x.shape: Size([32, 16]) 
+#         # dimension of x: (seq_len, batch, input_size)
+#         x = self.embedding(x)
+#         # x.shape: Size([32, 16, 256])
+#         # dimension of x after embedding: (seq_len, batch, embedding_size)
 
+#         x = pack_padded_sequence(x, lengths)
+#         x, hidden = self.rnn(x, hidden)
+#         x, output_lengths = pad_packed_sequence(x)
+        
+#         # x.shape: Size([32, 16, 128])
+#         # dimension of x after encoder: (seq_len, batch, hidden_size)
+#         # hidden.shape: Size([1, 16, 128])
+
+#         if self.num_directions == 2:
+#             x = x[:, :, :self.args.hidden_size] + x[:, :, self.args.hidden_size:]
+#         return x, hidden
         
 
 
