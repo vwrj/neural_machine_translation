@@ -1,3 +1,35 @@
+train_iter = data.BucketIterator(
+        dataset=train_data, 
+        batch_size=args.batch_size,
+        repeat=False,
+        sort_key=lambda x: len(x.src),
+        sort_within_batch=True,
+        device=device,
+        train=True
+    )
+
+for i, batch in enumerate(iter(train_iter)):
+    do_stuff_with_batch(batch)
+    
+#                    #
+# Batch & Dimensions #
+#                    #
+# `batch` represents a batch of examples. 
+# `batch.src` consists of two tensors. 
+# The first, `b.src[0]`, is the `src` examples from your batch; it's a tensor with the shape (max_seq_len, batch_size). 
+# Your sequences have already been indexed and padded. 
+# The second, `b.src[1]`, is the actual lengths of each sequence. It is of shape (batch_size, 1). 
+
+# data.BucketIterator automatically batches sequences of similar lengths together. 
+# it also automatically sorts in reverse order. 
+
+# Say you have a bidirectional, 2-layer RNN encoder. A single batch has max length 19 and batch size 32. 
+# The encoder_outputs will have shape: (19, 32, 512). 
+# Basically, it only returns the topmost layer's hidden states at each step of the sequence. 
+# And it concatenates both directional outputs (hidden states) for the topmost layer. 
+
+
+
 data.Example.fromlist
 
 # Our code: 
