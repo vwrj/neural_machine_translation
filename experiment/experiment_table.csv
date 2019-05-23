@@ -1,0 +1,2 @@
+id,question,outcome
+1,can i overfit on a small dataset,yes but i have to crank up the epochs to a lot -- loss values were very noisy at first which frustrated me but it seems to learn slowly at first and at epoch 49 you can clearly see that it memorizes the train data and train loss is very low

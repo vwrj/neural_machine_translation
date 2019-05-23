@@ -1,0 +1,256 @@
+class Args():
+    
+    #########
+    # Paths #
+    #########
+    
+    data = '/scratch/vr1059/vi-en/'
+    train_prefix = 'train_500'
+    val_prefix = 'train_500'
+    test_prefix = 'test'
+    src_ext = '.tok.vi'
+    trg_ext = '.tok.en'
+
+    max_sentence_length = 50
+    min_freq = 1
+    max_vocab_size = 100000
+    
+    ################
+    # Model params #
+    ################
+    
+    hidden_size = 500
+    embedding_size = 500
+    bidirectional = True
+    num_encoder_layers = 2
+    num_decoder_layers = 2
+    attn_model = 'general'
+    lr = 5e-3
+    epochs = 50
+    batch_size = 32
+    print_every = 10
+    clip = 1
+
+
+train, epoch: 0, batch number: 0, batch loss: 7.567677804049194
+train, epoch: 0, batch number: 10, batch loss: 7.559014344078633
+epoch: 0, average loss for epoch: 7.196130547167625, size of last batch 32
+0.026495725316691955
+train, epoch: 1, batch number: 0, batch loss: 6.703671155782509
+train, epoch: 1, batch number: 10, batch loss: 6.610415048398662
+epoch: 1, average loss for epoch: 6.48144339112098, size of last batch 32
+0.005051231765104739
+train, epoch: 2, batch number: 0, batch loss: 6.994731731875719
+train, epoch: 2, batch number: 10, batch loss: 6.396880695058557
+epoch: 2, average loss for epoch: 6.3901933188736315, size of last batch 32
+0.007909325148815835
+train, epoch: 3, batch number: 0, batch loss: 6.475321287938723
+train, epoch: 3, batch number: 10, batch loss: 6.502241612392448
+epoch: 3, average loss for epoch: 6.226146701144353, size of last batch 32
+0.10902566047095551
+train, epoch: 4, batch number: 0, batch loss: 6.334640660960875
+train, epoch: 4, batch number: 10, batch loss: 6.677722237989962
+epoch: 4, average loss for epoch: 6.051297698464891, size of last batch 32
+0.0793528148904644
+train, epoch: 5, batch number: 0, batch loss: 6.354805159486479
+train, epoch: 5, batch number: 10, batch loss: 6.141419040541348
+epoch: 5, average loss for epoch: 5.932568592200608, size of last batch 32
+["SOS i 's i , , , , , , , , , , , , , , , , , , , , , , , , , , ,", "SOS i 's i , , , , , , , , , , , , , , , , , , , , , , , , , , ,", 'SOS and i you i i i a a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i you i i i i a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i you i i i i a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i you i i i i a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i you i i i i a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i you i i i i a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i you i i i i a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i you i i i i a a a a a a a a a a a a a a a a a a a a a a a']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+0.06964080035041663
+train, epoch: 6, batch number: 0, batch loss: 6.479224166606732
+train, epoch: 6, batch number: 10, batch loss: 6.651195868935229
+epoch: 6, average loss for epoch: 5.8084699359981204, size of last batch 32
+0.07946530123125987
+train, epoch: 7, batch number: 0, batch loss: 6.06498410978855
+train, epoch: 7, batch number: 10, batch loss: 6.0273241440607075
+epoch: 7, average loss for epoch: 5.712787969735796, size of last batch 32
+0.07187518715231554
+train, epoch: 8, batch number: 0, batch loss: 5.9683431926064445
+train, epoch: 8, batch number: 10, batch loss: 6.549615163420172
+epoch: 8, average loss for epoch: 5.59719942830187, size of last batch 32
+0.10121892805933701
+train, epoch: 9, batch number: 0, batch loss: 6.015599715010069
+train, epoch: 9, batch number: 10, batch loss: 5.993844668678299
+epoch: 9, average loss for epoch: 5.558988713359939, size of last batch 32
+0.06987297921180521
+train, epoch: 10, batch number: 0, batch loss: 6.139365245612773
+train, epoch: 10, batch number: 10, batch loss: 6.632901660342974
+epoch: 10, average loss for epoch: 5.580949687197277, size of last batch 32
+["SOS so i 's do , do , do , do , do , do , do , do , do , do , do , do , do , ,", "SOS so i 's do , do , do , do , do , do , do , do , do , do , do , do , do , ,", 'SOS and i , about , right , the the the the the the the the the the the the the the the the the the the the the the the', 'SOS and i was right , do , do , do , do , do , do , do , do , do , do , do , do , the', 'SOS and i was right , do , do , do , do , do , do , do , do , do , do , do , do , the', 'SOS and i was right , do , do , do , do , do , do , do , do , do , do , do , do , the', 'SOS and i was right , do , do , do , do , do , do , do , do , do , do , do , do , the', 'SOS and i was right , do , do , do , do , do , do , do , do , do , do , do , do , the', 'SOS and i was right , do , do , do , do , do , do , do , do , do , do , do , do , the', 'SOS and i was right , do , do , do , do , do , do , do , do , do , do , do , do , the']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+0.08131418366824095
+train, epoch: 11, batch number: 0, batch loss: 5.597366877337457
+train, epoch: 11, batch number: 10, batch loss: 5.918508380138623
+epoch: 11, average loss for epoch: 5.408770599651131, size of last batch 32
+0.07371080857727383
+train, epoch: 12, batch number: 0, batch loss: 6.064189599216053
+train, epoch: 12, batch number: 10, batch loss: 6.0940361533520555
+epoch: 12, average loss for epoch: 5.3605761688848315, size of last batch 32
+0.07831604657754905
+train, epoch: 13, batch number: 0, batch loss: 5.7093439837456845
+train, epoch: 13, batch number: 10, batch loss: 5.839872225292782
+epoch: 13, average loss for epoch: 5.308978684023953, size of last batch 32
+0.11297279337536976
+train, epoch: 14, batch number: 0, batch loss: 5.959371516290276
+train, epoch: 14, batch number: 10, batch loss: 5.819982933496654
+epoch: 14, average loss for epoch: 5.241161253957555, size of last batch 32
+0.07970370365823273
+train, epoch: 15, batch number: 0, batch loss: 5.504641200373993
+train, epoch: 15, batch number: 10, batch loss: 5.551945936155593
+epoch: 15, average loss for epoch: 5.160608572608826, size of last batch 32
+["SOS i 'm do to do to do to do to do to do to do to do to do ? EOS", "SOS i 'm do to do to do ? EOS", 'SOS and i was a a a a a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i can a a a a a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i was a a a a a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i can a a a a a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i can a a a a a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i was a a a a a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i can a a a a a a a a a a a a a a a a a a a a a a a a a a a', 'SOS and i was a a a a a a a a a a a a a a a a a a a a a a a a a a a']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+0.0958868251362037
+train, epoch: 16, batch number: 0, batch loss: 5.7841914871619675
+train, epoch: 16, batch number: 10, batch loss: 5.873749887966061
+epoch: 16, average loss for epoch: 5.130697732133155, size of last batch 32
+0.0920701785526108
+train, epoch: 17, batch number: 0, batch loss: 5.402381958429229
+train, epoch: 17, batch number: 10, batch loss: 5.687644243696224
+epoch: 17, average loss for epoch: 5.174645444994242, size of last batch 32
+0.15752515099316128
+train, epoch: 18, batch number: 0, batch loss: 5.6283938075374
+train, epoch: 18, batch number: 10, batch loss: 5.696739065487572
+epoch: 18, average loss for epoch: 5.137977717106924, size of last batch 32
+0.07503032788486105
+train, epoch: 19, batch number: 0, batch loss: 5.377962838931243
+train, epoch: 19, batch number: 10, batch loss: 5.538478056285851
+epoch: 19, average loss for epoch: 4.997136805099384, size of last batch 32
+0.09461396897041496
+train, epoch: 20, batch number: 0, batch loss: 5.621074645785385
+train, epoch: 20, batch number: 10, batch loss: 5.608870380467256
+epoch: 20, average loss for epoch: 5.015632431457921, size of last batch 32
+['SOS but me : me . EOS', "SOS you 's 's 's 's to a a a a a a a a his ? EOS", 'SOS i one to lot to risk . EOS', 'SOS so you didn here years . EOS', "SOS i 's so that 's here brain . EOS", 'SOS and i one , here to reviewed . EOS', 'SOS and i one years to his . EOS', "SOS i 's so that 's here brain . EOS", "SOS you one to look that 's a look , and and and and and and i have to brain . EOS", "SOS i 's so that 's here brain . EOS"]
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+0.17950898446881872
+train, epoch: 21, batch number: 0, batch loss: 5.374620725151035
+train, epoch: 21, batch number: 10, batch loss: 5.430918472902724
+epoch: 21, average loss for epoch: 4.9006182834828955, size of last batch 32
+0.15617261698288362
+train, epoch: 22, batch number: 0, batch loss: 5.356580165779632
+train, epoch: 22, batch number: 10, batch loss: 5.593209903053299
+epoch: 22, average loss for epoch: 4.806600102582129, size of last batch 32
+0.6889965593885862
+train, epoch: 23, batch number: 0, batch loss: 5.159985997734465
+train, epoch: 23, batch number: 10, batch loss: 5.337265568983031
+epoch: 23, average loss for epoch: 4.720893014574505, size of last batch 32
+0.12483939029838693
+train, epoch: 24, batch number: 0, batch loss: 5.125706855940736
+train, epoch: 24, batch number: 10, batch loss: 5.153632607104446
+epoch: 24, average loss for epoch: 4.534563113294864, size of last batch 32
+0.6378229345532398
+train, epoch: 25, batch number: 0, batch loss: 4.833143789556962
+train, epoch: 25, batch number: 10, batch loss: 5.085980913151291
+epoch: 25, average loss for epoch: 4.4171072269638065, size of last batch 32
+["SOS i 'm be same up ? EOS", "SOS you 's to look . EOS", 'SOS in you can be rwanda , i can look . EOS', 'SOS and you can be nurse . EOS', 'SOS so in you can be rwanda , and i can look inside the brain , and you can course . EOS', "SOS and i 've billions later , and i look inside the group , i can course . EOS", "SOS and i 've billions later , and i look inside the group , i can course . EOS", 'SOS so i can be rwanda , i can look . EOS', 'SOS you can make hundreds of the brain of the brain of the world of the world of brain of the world of the world of brain of the world of', 'SOS in you can be hundreds of thousands of film . EOS']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+0.8337663491773093
+train, epoch: 26, batch number: 0, batch loss: 4.9013525783947065
+train, epoch: 26, batch number: 10, batch loss: 4.830190158938814
+epoch: 26, average loss for epoch: 4.325341474762391, size of last batch 32
+0.5850940617290462
+train, epoch: 27, batch number: 0, batch loss: 4.608949650280495
+train, epoch: 27, batch number: 10, batch loss: 4.695523497251434
+epoch: 27, average loss for epoch: 4.132719166011855, size of last batch 32
+1.3900092930685155
+train, epoch: 28, batch number: 0, batch loss: 4.562171014186565
+train, epoch: 28, batch number: 10, batch loss: 4.643382902127151
+epoch: 28, average loss for epoch: 4.066912721860482, size of last batch 32
+0.8837702808083954
+train, epoch: 29, batch number: 0, batch loss: 4.654826455066887
+train, epoch: 29, batch number: 10, batch loss: 4.509258204618786
+epoch: 29, average loss for epoch: 3.9795960670301733, size of last batch 32
+1.6032622136307122
+train, epoch: 30, batch number: 0, batch loss: 4.55129144490794
+train, epoch: 30, batch number: 10, batch loss: 4.507844709757409
+epoch: 30, average loss for epoch: 3.918528413616553, size of last batch 32
+["SOS and i 'm going to look at the course . EOS", "SOS i do the personal to look that 's a the measurements . EOS", 'SOS thank you very much . EOS', "SOS and i can 't 't 't hear very difficult . EOS", "SOS and it 's very simple . EOS", 'SOS and i want dance . EOS', 'SOS and i want dance . EOS', "SOS and i can 't 't one very simple . EOS", "SOS so i can 't 't one very difficult . EOS", 'SOS thank you very much . EOS']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+1.8421739816381713
+train, epoch: 31, batch number: 0, batch loss: 4.233207114409522
+train, epoch: 31, batch number: 10, batch loss: 4.570057622789197
+epoch: 31, average loss for epoch: 3.8149133972265403, size of last batch 32
+1.4284300526209868
+train, epoch: 32, batch number: 0, batch loss: 4.497057389060702
+train, epoch: 32, batch number: 10, batch loss: 4.485562092943356
+epoch: 32, average loss for epoch: 3.752400905659222, size of last batch 32
+1.9149847589733426
+train, epoch: 33, batch number: 0, batch loss: 4.0849199196274455
+train, epoch: 33, batch number: 10, batch loss: 4.107539043827677
+epoch: 33, average loss for epoch: 3.525125920016394, size of last batch 32
+2.092028495128994
+train, epoch: 34, batch number: 0, batch loss: 4.131992423493239
+train, epoch: 34, batch number: 10, batch loss: 3.8375190457695987
+epoch: 34, average loss for epoch: 3.3372200757112505, size of last batch 32
+2.3298938849355064
+train, epoch: 35, batch number: 0, batch loss: 3.945901359321059
+train, epoch: 35, batch number: 10, batch loss: 3.676560352682839
+epoch: 35, average loss for epoch: 3.2112467980908304, size of last batch 32
+["SOS and i 'm a lot of his body , and and and and and and and and and and and and and and and and and and and and and", 'SOS movies 4 of the arteries . EOS', 'SOS thank you very much . EOS', 'SOS so i quit reassured . EOS', "SOS so this is a cinder block , you 're going to look inside a 44 of film , and they 're going to make the pathway , and they 're", 'SOS and i want to leave with the university . EOS', 'SOS but i want to leave with the university . EOS', 'SOS so this is the tone EOS', 'SOS so this is the tone EOS', 'SOS thank you very promising . EOS']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+2.995563053870343
+train, epoch: 36, batch number: 0, batch loss: 3.8028391672360473
+train, epoch: 36, batch number: 10, batch loss: 3.5516903587326722
+epoch: 36, average loss for epoch: 3.0484094481026434, size of last batch 32
+3.376821897115357
+train, epoch: 37, batch number: 0, batch loss: 3.621163705138809
+train, epoch: 37, batch number: 10, batch loss: 3.4762665436782982
+epoch: 37, average loss for epoch: 2.8930679320017987, size of last batch 32
+3.307383812218782
+train, epoch: 38, batch number: 0, batch loss: 3.412589227920023
+train, epoch: 38, batch number: 10, batch loss: 3.1672108870847278
+epoch: 38, average loss for epoch: 2.7540368613805413, size of last batch 32
+3.1665791266560084
+train, epoch: 39, batch number: 0, batch loss: 3.2953508769958284
+train, epoch: 39, batch number: 10, batch loss: 2.95839432958891
+epoch: 39, average loss for epoch: 2.635621540904287, size of last batch 32
+3.5431882449633285
+train, epoch: 40, batch number: 0, batch loss: 3.242453835227273
+train, epoch: 40, batch number: 10, batch loss: 3.1196485121892925
+epoch: 40, average loss for epoch: 2.578978269553996, size of last batch 32
+["SOS i 'm trying to tell you about passions . EOS", 'SOS rachel peter moves arm . EOS', 'SOS it is an expression of faith in the political machine the political machine and pain for yet of the 21st . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS i was looking at us . EOS', 'SOS but i want to leave with the pieces . EOS', "SOS it 's an riefenstahl in her elegant nazi propaganda who . EOS", 'SOS it could be difference . EOS', 'SOS thank you . EOS']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+3.5508149431925777
+train, epoch: 41, batch number: 0, batch loss: 3.114648325122267
+train, epoch: 41, batch number: 10, batch loss: 3.0908028071970604
+epoch: 41, average loss for epoch: 2.477969124902123, size of last batch 32
+3.543936566101239
+train, epoch: 42, batch number: 0, batch loss: 2.9703685202999135
+train, epoch: 42, batch number: 10, batch loss: 2.8100590605580784
+epoch: 42, average loss for epoch: 2.371471519166754, size of last batch 32
+4.095583188418155
+train, epoch: 43, batch number: 0, batch loss: 2.891231277869678
+train, epoch: 43, batch number: 10, batch loss: 2.479391590359106
+epoch: 43, average loss for epoch: 2.2022537891851557, size of last batch 32
+4.510638112029842
+train, epoch: 44, batch number: 0, batch loss: 2.7030334121475836
+train, epoch: 44, batch number: 10, batch loss: 2.683678942474307
+epoch: 44, average loss for epoch: 2.1390872286506846, size of last batch 32
+5.302925409160612
+train, epoch: 45, batch number: 0, batch loss: 2.500471424590046
+train, epoch: 45, batch number: 10, batch loss: 2.6020575499671366
+epoch: 45, average loss for epoch: 1.9984521425460402, size of last batch 32
+["SOS i 'm going to understand the chemistry of diet . EOS", 'SOS when peter spend a lot of analysis . EOS', 'SOS it is a lot of faith in the print by the arteries . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS but what went wrong ? EOS', 'SOS not anymore . EOS', 'SOS not anymore . EOS', 'SOS this is the tower in the middle of the political the political the political machine the print and the projectionist . EOS']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+5.967593242262317
+train, epoch: 46, batch number: 0, batch loss: 2.426955316365794
+train, epoch: 46, batch number: 10, batch loss: 2.2597922330604683
+epoch: 46, average loss for epoch: 1.8722333096517374, size of last batch 32
+6.489232354193564
+train, epoch: 47, batch number: 0, batch loss: 2.2248154476679374
+train, epoch: 47, batch number: 10, batch loss: 2.0787775976935947
+epoch: 47, average loss for epoch: 1.739344844731389, size of last batch 32
+6.536927774740731
+train, epoch: 48, batch number: 0, batch loss: 2.0018084386687285
+train, epoch: 48, batch number: 10, batch loss: 1.8450501772003465
+epoch: 48, average loss for epoch: 1.6187314329054692, size of last batch 32
+["SOS i 'm going to tell my father died . EOS", 'SOS when peter moves his arm . EOS', 'SOS okay , hah . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', "SOS and they perform dozens of integrations in order to understand what 's happening ? EOS", "SOS so maybe you took a similar aircraft in brooklyn , they 're seeing a 44 to 64 percent of air that their needs ? EOS", 'SOS it could be anti-corrosion . EOS', 'SOS thank you . EOS']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+8.713613212424068
+train, epoch: 49, batch number: 0, batch loss: 1.974234735732523
+train, epoch: 49, batch number: 10, batch loss: 1.7828185918454231
+epoch: 49, average loss for epoch: 1.5408733154548062, size of last batch 32
+['SOS i discovered a hidden message . EOS', 'SOS when peter moves his arm . EOS', 'SOS this is the tower in the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS what was looking at us . EOS', 'SOS so i were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+['SOS was the tale told well ? EOS', 'SOS rachel pike : the science behind a climate headline EOS', 'SOS this is not just in hebrew , by the way . EOS', 'SOS it could be anti-bacterial . EOS', 'SOS porous , nonporous . EOS', 'SOS he was looking at us . EOS', 'SOS and what went wrong ? EOS', 'SOS so we were pretty reassured by this . EOS', "SOS it 's easy , isn 't it ? EOS", 'SOS okay , here it is . EOS']
+9.66278040505953
