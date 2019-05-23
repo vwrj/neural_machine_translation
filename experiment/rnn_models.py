@@ -141,7 +141,7 @@ class LuongAttnDecoderRNN(nn.Module):
         rnn_output = rnn_output.squeeze(0) # S=1 x B x N --> B x N
         context = context.squeeze(1) # B x S=1 x N --> B x N
         concat_input = torch.cat((rnn_output, context), 1)
-        concat_output = F.tanh(self.concat(concat_input))
+        concat_output = torch.tanh(self.concat(concat_input))
 
         # Finally, predict next token (Luong eq. 6, without softmax)
         output = self.out(concat_output)

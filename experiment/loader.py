@@ -85,6 +85,7 @@ def load_data(args):
     # First you define Fields, which are 'Columns', which have your pre-processing baked in. 
     # Then you call Dataset.split which splits your raw data into train/val/test datasets. 
     # Then you call Field.build_vocab, which actually goes through the train data and pre-processes it. Maps each word to an index, pads it, appends SOS + EOS. 
+    
     SRC = data.Field(
             tokenize=tokenize,
             init_token='SOS',
@@ -104,8 +105,8 @@ def load_data(args):
 
     train, val, test = TranslationDataset.splits(
             path=args.data,
-            train='train', validation='dev', test='test',
-            exts=('.tok.vi', '.tok.en'), fields=(SRC, EN)
+            train=args.train_prefix, validation=args.val_prefix, test=args.test_prefix,
+            exts=(args.src_ext, args.trg_ext), fields=(SRC, EN)
             )
 
     SRC.build_vocab(train.src, min_freq=args.min_freq, max_size=args.max_vocab_size)
