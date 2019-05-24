@@ -1,9 +1,48 @@
 experiment 3
 
-# Increased lr to 1e-2, too high
-train, epoch: 0, batch number: 0, batch loss: 10.776033032161804train, epoch: 0, batch number: 1000, batch loss: 623.4578619909503train, epoch: 0, batch number: 0, batch loss: 10.775944480671482train, epoch: 0, batch number: 1000, batch loss: 13.981183271919878
+### Increased lr to 1e-2, too high
+train, epoch: 0, batch number: 0, batch loss: 10.776033032161804
+train, epoch: 0, batch number: 1000, batch loss: 623.4578619909503
 
-# Set lr to 5e-4 but clip gradient to 0.1
+### Increased lr to 5e-2, still too high
+train, epoch: 0, batch number: 0, batch loss: 10.775944480671482
+train, epoch: 0, batch number: 1000, batch loss: 13.981183271919878
+
+### What if lr is too high? Set lr to 5e-4 but clip gradient to 0.1
+
+class Args():
+    
+    #########
+    # Paths #
+    #########
+    
+    data = '/scratch/vr1059/vi-en/'
+    train_prefix = 'train'
+    val_prefix = 'dev'
+    test_prefix = 'test'
+    src_ext = '.tok.vi'
+    trg_ext = '.tok.en'
+
+    max_sentence_length = 50
+    min_freq = 1
+    max_vocab_size = 100000
+    
+    ################
+    # Model params #
+    ################
+    
+    hidden_size = 500
+    embedding_size = 500
+    bidirectional = True
+    num_encoder_layers = 2
+    num_decoder_layers = 2
+    attn_model = 'general'
+    lr = 5e-4
+    epochs = 12
+    batch_size = 64
+    print_every = 1000
+    clip = 0.1
+
 train, epoch: 0, batch number: 0, batch loss: 10.775992838541667
 train, epoch: 0, batch number: 1000, batch loss: 5.358255949733096
 train, epoch: 0, batch number: 2000, batch loss: 4.532953962873409
@@ -54,3 +93,12 @@ train, epoch: 9, batch number: 2000, batch loss: 1.4684716653403527epoch: 9, ave
 ['SOS you have a great memory . EOS', 'SOS she taught the love of what it was . EOS', "SOS mairead is the citizen 's consciousness EOS", "SOS it 's at the hot airport . EOS", 'SOS this is a family of offspring . EOS', "SOS it 's time for time . EOS", "SOS here 's the first one . EOS", "SOS we 've divided the community . EOS", 'SOS think about that . EOS', 'SOS i was very pleased . EOS']['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
 bleu score: 11.061187983237112
 train, epoch: 10, batch number: 0, batch loss: 1.394408908420139
+train, epoch: 10, batch number: 1000, batch loss: 2.0991215281639235
+train, epoch: 10, batch number: 2000, batch loss: 1.3030582618526567epoch: 10, average loss for epoch: 1.6016800724766544, size of last batch 64
+leu score: 10.78542355347997
+train, epoch: 11, batch number: 0, batch loss: 1.2604447428385417
+train, epoch: 11, batch number: 1000, batch loss: 1.9688911845251333
+train, epoch: 11, batch number: 2000, batch loss: 1.1345403747857492epoch: 11, average loss for epoch: 1.4695715054682856, size of last batch 64
+['SOS you have an intense intelligence . EOS', 'SOS and the press was love to know what was the privilege . EOS', "SOS mellody gross is the citizen 's action . EOS", 'SOS it was at fort accident . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very much time . EOS', 'SOS this is the first one . EOS', 'SOS we played networks . EOS', 'SOS think about that . EOS', 'SOS i was very pleased . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 10.6132170281824
