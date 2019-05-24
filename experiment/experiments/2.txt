@@ -1,0 +1,86 @@
+experiment 2
+
+class Args():
+    
+    #########
+    # Paths #
+    #########
+    
+    data = '/scratch/vr1059/vi-en/'
+    train_prefix = 'train'
+    val_prefix = 'dev'
+    test_prefix = 'test'
+    src_ext = '.tok.vi'
+    trg_ext = '.tok.en'
+
+    max_sentence_length = 50
+    min_freq = 1
+    max_vocab_size = 100000
+    
+    ################
+    # Model params #
+    ################
+    
+    hidden_size = 500
+    embedding_size = 500
+    bidirectional = True
+    num_encoder_layers = 2
+    num_decoder_layers = 2
+    attn_model = 'general'
+    lr = 5e-3
+    epochs = 12
+    batch_size = 64
+    print_every = 1000
+    clip = 1
+
+train, epoch: 0, batch number: 0, batch loss: 10.77606165478801
+train, epoch: 0, batch number: 0, batch loss: 10.776045022551546
+train, epoch: 0, batch number: 1000, batch loss: 7.0553131870288945
+train, epoch: 0, batch number: 2000, batch loss: 6.549676253332346epoch: 0, average loss for epoch: 7.20906963938972, size of last batch 64
+['SOS and we don is a world is a world . EOS', 'SOS we don is a problem . EOS', 'SOS we don is a world of the problem . EOS', 'SOS we don is a problem . EOS', 'SOS and we don is a world is a world . EOS', 'SOS and we don is a world is a world . EOS', 'SOS and we don is a world is a world . EOS', 'SOS we don is a problem . EOS', 'SOS and we don is a world of the world . EOS', 'SOS we don is a problem . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+0.4293467406362773
+train, epoch: 1, batch number: 0, batch loss: 7.152389441663362
+train, epoch: 1, batch number: 1000, batch loss: 7.103268621754606
+train, epoch: 1, batch number: 2000, batch loss: 6.356963098896623epoch: 1, average loss for epoch: 7.224989789420301, size of last batch 64
+0.0602752038524265
+train, epoch: 2, batch number: 0, batch loss: 7.090933380005947
+train, epoch: 2, batch number: 1000, batch loss: 6.961391429805277
+train, epoch: 2, batch number: 2000, batch loss: 6.278090635182168epoch: 2, average loss for epoch: 7.1376330872322, size of last batch 64
+0.2264938901701777
+train, epoch: 3, batch number: 0, batch loss: 7.070753153499207
+train, epoch: 3, batch number: 1000, batch loss: 7.085467212363903
+train, epoch: 3, batch number: 2000, batch loss: 6.327284971119668epoch: 3, average loss for epoch: 7.162048497340324, size of last batch 64
+["SOS we don 't want . EOS", "SOS we don 't want . EOS", "SOS we don 't want . EOS", "SOS we don 't want . EOS", "SOS we don 't want . EOS", "SOS we don 't want . EOS", "SOS we don 't want . EOS", "SOS we don 't want . EOS", "SOS we don 't want . EOS", "SOS we don 't want . EOS"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+0.23396767641288427
+train, epoch: 4, batch number: 0, batch loss: 7.057353105174465
+train, epoch: 4, batch number: 1000, batch loss: 6.93330258061139
+train, epoch: 4, batch number: 2000, batch loss: 6.442702162322274epoch: 4, average loss for epoch: 7.139730076537299, size of last batch 64
+train, epoch: 5, batch number: 0, batch loss: 7.334782043021412
+train, epoch: 5, batch number: 1000, batch loss: 7.204919454041039
+train, epoch: 5, batch number: 2000, batch loss: 6.326945372667358epoch: 5, average loss for epoch: 7.176284324862302, size of last batch 64
+["SOS and we don 't be a world . EOS", "SOS and we don 't be a world of the world . EOS", "SOS so we don 't be a world . EOS", "SOS so we don 't be a world . EOS", "SOS so we don 't be a world . EOS", "SOS and we don 't be a world . EOS", "SOS so we don 't be a world . EOS", "SOS and we don 't be a world of the world . EOS", "SOS so we don 't be a world . EOS", "SOS and we don 't be a world . EOS"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+0.47102612138538363
+train, epoch: 6, batch number: 0, batch loss: 7.077085708267248
+train, epoch: 6, batch number: 1000, batch loss: 6.990173033134422
+train, epoch: 6, batch number: 2000, batch loss: 6.203545014440166epoch: 6, average loss for epoch: 7.1353022025221655, size of last batch 64
+train, epoch: 7, batch number: 0, batch loss: 7.267080163312847
+train, epoch: 7, batch number: 1000, batch loss: 7.17305603538526
+train, epoch: 7, batch number: 2000, batch loss: 6.516341222970971
+epoch: 7, average loss for epoch: 7.161174882648859, size of last batch 64
+train, epoch: 8, batch number: 0, batch loss: 6.963681323106662
+train, epoch: 8, batch number: 1000, batch loss: 7.312160575010469
+train, epoch: 8, batch number: 2000, batch loss: 6.426908809426837epoch: 8, average loss for epoch: 7.155018535480743, size of last batch 64
+train, epoch: 9, batch number: 0, batch loss: 7.195551025971451
+train, epoch: 9, batch number: 1000, batch loss: 7.17004783029732
+train, epoch: 9, batch number: 2000, batch loss: 6.32528903473045epoch: 9, average loss for epoch: 7.230047269679533, size of last batch 64
+["SOS we don 't think , and we don 't think , and we don 't think , and we don 't think , and we don 't think , and", "SOS we don 't think , and we don 't think , we don 't think , we don 't think , we don 't think , and we don 't", "SOS and we don 't think , we don 't think , and we don 't think , and we don 't think , and we don 't think , and", "SOS we don 't think , and we don 't think , we don 't think , and we don 't think , we don 't think , we don 't", "SOS and we don 't think , we don 't think , and we don 't think , and we don 't think , and we don 't think , and", "SOS and we don 't think , we don 't think , and we don 't think , and we don 't think , and we don 't think , and", "SOS and we don 't think , and we don 't think , and we don 't think , and we don 't think , and we don 't think ,", "SOS and we don 't think , we don 't think , we don 't think , and we don 't think , and we don 't think , and we", "SOS and we don 't think , and we don 't think , and we don 't think , and we don 't think , and we don 't think ,", "SOS and we don 't think , and we don 't think , and we don 't think , and we don 't think , and we don 't think ,"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+train, epoch: 10, batch number: 0, batch loss: 7.440318168863997
+train, epoch: 10, batch number: 1000, batch loss: 7.247169277376465
+train, epoch: 10, batch number: 2000, batch loss: 6.7242963890328795epoch: 10, average loss for epoch: 7.235022142565062, size of last batch 64
+train, epoch: 11, batch number: 0, batch loss: 7.092352919310072
+train, epoch: 11, batch number: 1000, batch loss: 7.3684544139970685
+train, epoch: 11, batch number: 2000, batch loss: 6.259547518327903epoch: 11, average loss for epoch: 7.246384399670009, size of last batch 64
