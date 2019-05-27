@@ -1,5 +1,6 @@
 from torchtext import data
 from torchtext import datasets
+from torchtext.vocab import Vectors
 
 import io
 import os
@@ -84,7 +85,7 @@ def load_data(args):
     
     # First you define Fields, which are 'Columns', which have your pre-processing baked in. 
     # Then you call Dataset.split which splits your raw data into train/val/test datasets. 
-    # Then you call Field.build_vocab, which actually goes through the train data and pre-processes it. Maps each word to an index, pads it, appends SOS + EOS. 
+    # Then you call Field.build_vocab, which as its name suggests, builds the vocabulary from the train data; it builds a dictionary mapping words to ids (including SOS and EOS) and puts it inside each Field object.
     
     SRC = data.Field(
             tokenize=tokenize,
@@ -94,7 +95,7 @@ def load_data(args):
             fix_length=args.max_sentence_length
             )
 
-    EN = data.Field(
+    TRG = data.Field(
             tokenize=tokenize,
             init_token='SOS',
             eos_token='EOS',
@@ -106,18 +107,28 @@ def load_data(args):
     train, val, test = TranslationDataset.splits(
             path=args.data,
             train=args.train_prefix, validation=args.val_prefix, test=args.test_prefix,
-            exts=(args.src_ext, args.trg_ext), fields=(SRC, EN)
+            exts=(args.src_ext, args.trg_ext), fields=(SRC, TRG)
             )
-
-    SRC.build_vocab(train.src, min_freq=args.min_freq, max_size=args.max_vocab_size)
-    EN.build_vocab(train.trg, min_freq=args.min_freq, max_size=args.max_vocab_size)
+    
+    if args.fasttext:
+        src_vecs = Vectors(name=args.fasttext_src_dir, max_vectors=args.max_vocab_size)
+        trg_vecs = Vectors(name=args.fasttext_trg_dir, max_vectors=args.max_vocab_size)
+        
+        SRC.build_vocab(train.src, min_freq=args.min_freq, max_size=args.max_vocab_size)
+        TRG.build_vocab(train.trg, min_freq=args.min_freq, max_size=args.max_vocab_size)
+        
+        SRC.vocab.set_vectors(src_vecs.stoi, src_vecs.vectors, src_vecs.dim)
+        TRG.vocab.set_vectors(trg_vecs.stoi, trg_vecs.vectors, trg_vecs.dim)
+    else:
+        SRC.build_vocab(train.src, min_freq=args.min_freq, max_size=args.max_vocab_size)
+        TRG.build_vocab(train.trg, min_freq=args.min_freq, max_size=args.max_vocab_size)
 
     print("most common source vocabs:", SRC.vocab.freqs.most_common(10))
     print("source vocab size:", len(SRC.vocab))
-    print("most common english vocabs:", EN.vocab.freqs.most_common(10))
-    print("english vocab size:", len(EN.vocab))
+    print("most common english vocabs:", TRG.vocab.freqs.most_common(10))
+    print("english vocab size:", len(TRG.vocab))
 
-    return train, val, test, SRC, EN
+    return train, val, test, SRC, TRG
 
 
 

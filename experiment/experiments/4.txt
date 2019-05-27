@@ -1,0 +1,63 @@
+Experiment 4
+
+Reason: Does adding pre-trained Fasttext word vectors speed up model convergence, or improve performance?
+
+train, epoch: 0, batch number: 0, batch loss: 10.77598890367445
+train, epoch: 0, batch number: 1000, batch loss: 5.523159198491656
+train, epoch: 0, batch number: 2000, batch loss: 5.721270763623327epoch: 0, average loss for epoch: 5.973380913545031, size of last batch 64
+['SOS thank you do . EOS', 'SOS thank you do . EOS', "SOS but 's . EOS", 'SOS and you do . EOS', 'SOS and you do . EOS', 'SOS and you do . EOS', 'SOS and you do . EOS', 'SOS and you do . EOS', "SOS it 's not . EOS", 'SOS and you do . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 1.352318956374056
+train, epoch: 1, batch number: 0, batch loss: 5.099715795272436
+train, epoch: 1, batch number: 1000, batch loss: 4.677589269596438
+train, epoch: 1, batch number: 2000, batch loss: 5.181005299205306epoch: 1, average loss for epoch: 5.122496806171094, size of last batch 64
+bleu score: 2.63157385134639
+train, epoch: 2, batch number: 0, batch loss: 4.466865735176282
+train, epoch: 2, batch number: 1000, batch loss: 4.291474133003049
+train, epoch: 2, batch number: 2000, batch loss: 4.876735592435469epoch: 2, average loss for epoch: 4.740767700045781, size of last batch 64
+train, epoch: 3, batch number: 0, batch loss: 4.021529983688187
+train, epoch: 3, batch number: 1000, batch loss: 3.948884349426348
+train, epoch: 3, batch number: 2000, batch loss: 4.611232896152008epoch: 3, average loss for epoch: 4.452631468704974, size of last batch 64
+["SOS there 's a little bit . EOS", "SOS and that 's what we do . EOS", "SOS it 's a little bit . EOS", "SOS so , that 's a little bit . EOS", 'SOS this is the beginning . EOS', "SOS it 's very simple . EOS", "SOS here 's a picture . EOS", 'SOS so we are all . EOS', 'SOS how do it ? EOS', 'SOS i was very excited . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 4.15754855803241
+train, epoch: 4, batch number: 0, batch loss: 3.6966590741615155
+train, epoch: 4, batch number: 1000, batch loss: 3.6917281144696728
+train, epoch: 4, batch number: 2000, batch loss: 4.384842648332935epoch: 4, average loss for epoch: 4.221136205534454, size of last batch 64
+bleu score: 4.675900728516754
+train, epoch: 5, batch number: 0, batch loss: 3.392068380837912
+train, epoch: 5, batch number: 1000, batch loss: 3.4594620005616177
+train, epoch: 5, batch number: 2000, batch loss: 4.200334421307361epoch: 5, average loss for epoch: 4.0272213195685085, size of last batch 64
+bleu score: 5.227259074894505
+train, epoch: 6, batch number: 0, batch loss: 3.1421043759300593
+train, epoch: 6, batch number: 1000, batch loss: 3.2644851547456675
+train, epoch: 6, batch number: 2000, batch loss: 4.045861092853729epoch: 6, average loss for epoch: 3.854611804635107, size of last batch 64
+["SOS there 's a couple of a sudden . EOS", "SOS that 's what it 's about . EOS", "SOS it 's about the brain of the brain . EOS", "SOS it 's a little bit . EOS", 'SOS this is a liter . EOS', "SOS it 's very simple . EOS", "SOS here 's the example . EOS", 'SOS we have to innovate . EOS', 'SOS how about this ? EOS', 'SOS i was extrapolating . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 5.556564289230332
+train, epoch: 7, batch number: 0, batch loss: 2.951177240728022
+train, epoch: 7, batch number: 1000, batch loss: 3.113137711609435
+train, epoch: 7, batch number: 2000, batch loss: 3.916572993845602epoch: 7, average loss for epoch: 3.7014894121598076, size of last batch 64
+bleu score: 5.7747792243302625
+train, epoch: 8, batch number: 0, batch loss: 2.753933302212111
+train, epoch: 8, batch number: 1000, batch loss: 2.9783626845314504
+train, epoch: 8, batch number: 2000, batch loss: 3.795478777037524epoch: 8, average loss for epoch: 3.564626265596986, size of last batch 64
+bleu score: 6.076170403152358
+train, epoch: 9, batch number: 0, batch loss: 2.577527615613553
+train, epoch: 9, batch number: 1000, batch loss: 2.823159135811136
+train, epoch: 9, batch number: 2000, batch loss: 3.6826666691563097epoch: 9, average loss for epoch: 3.4428101480611764, size of last batch 64
+["SOS there 's a big regularity . EOS", "SOS that 's what 's going . EOS", "SOS it 's the beginning of the g20 . EOS", "SOS it 's going to be graded . EOS", 'SOS this is a liter . EOS', "SOS it 's a little bit . EOS", 'SOS this is the first . EOS', 'SOS we are all . EOS', 'SOS how about this ? EOS', 'SOS i was lucky . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 6.118707380618905
+train, epoch: 10, batch number: 0, batch loss: 2.424682170043498
+train, epoch: 10, batch number: 1000, batch loss: 2.6986270458921693
+train, epoch: 10, batch number: 2000, batch loss: 3.57070205134142epoch: 10, average loss for epoch: 3.3323209998760843, size of last batch 64
+["SOS there 's a couple of humor . EOS", "SOS that 's what 's going . EOS", 'SOS now , the essence is important . EOS', "SOS it 's going to be graded . EOS", 'SOS this is a liter . EOS', "SOS it 's very complicated . EOS", 'SOS this is the first . EOS', 'SOS we are all . EOS', 'SOS how about that ? EOS', 'SOS i was lucky . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 6.481675158554974
+train, epoch: 11, batch number: 0, batch loss: 2.278044871794872
+train, epoch: 11, batch number: 1000, batch loss: 2.5831814375401154
+train, epoch: 11, batch number: 2000, batch loss: 3.4604191096289436epoch: 11, average loss for epoch: 3.231656077719212, size of last batch 64
+["SOS there 's a couple of humor . EOS", "SOS that 's what 's going . EOS", 'SOS the first is the adolescent . EOS', "SOS it 's just going to be . EOS", 'SOS this is a liter . EOS', "SOS it 's called . EOS", 'SOS this is the first . EOS', 'SOS we are all . EOS', 'SOS how about that ? EOS', 'SOS i was lucky . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 6.630348582140545

@@ -54,11 +54,11 @@ train, epoch: 1, batch number: 0, batch loss: 4.5160294596354165
 train, epoch: 1, batch number: 1000, batch loss: 4.4418733897723905
 train, epoch: 1, batch number: 2000, batch loss: 3.80115236287953
 epoch: 1, average loss for epoch: 4.188729763003378, size of last batch 64
-leu score: 5.783817721503462
+bleu score: 5.783817721503462
 train, epoch: 2, batch number: 0, batch loss: 3.788904622395833
 train, epoch: 2, batch number: 1000, batch loss: 3.912436343879745
 train, epoch: 2, batch number: 2000, batch loss: 3.3096379832119247epoch: 2, average loss for epoch: 3.613370633665416, size of last batch 64
-leu score: 7.858347193818742
+bleu score: 7.858347193818742
 train, epoch: 3, batch number: 0, batch loss: 3.264529079861111
 train, epoch: 3, batch number: 1000, batch loss: 3.526538056976572
 train, epoch: 3, batch number: 2000, batch loss: 2.916000799614349epoch: 3, average loss for epoch: 3.1870903911996256, size of last batch 64

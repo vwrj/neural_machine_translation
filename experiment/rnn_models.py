@@ -11,7 +11,10 @@ class Encoder(nn.Module):
         self.args = args
         self.num_directions = 2 if args.bidirectional else 1
 
-        self.embedding = nn.Embedding(src_vocab_size, args.embedding_size, padding_idx = padding_idx)
+        if args.fasttext:
+            self.embedding = nn.Embedding(src_vocab_size, args.embedding_size).from_pretrained(args.src.vocab.vectors)
+        else:
+            self.embedding = nn.Embedding(src_vocab_size, args.embedding_size, padding_idx = padding_idx)
         self.rnn = nn.GRU(
                 input_size = args.embedding_size,
                 hidden_size = args.hidden_size,
@@ -105,11 +108,14 @@ class LuongAttnDecoderRNN(nn.Module):
         self.device = device
 
         # Define layers
-        self.embedding = nn.Embedding(
+        if args.fasttext:
+            self.embedding = nn.Embedding(self.output_size, args.embedding_size).from_pretrained(args.trg.vocab.vectors)
+        else:
+            self.embedding = nn.Embedding(
                 self.output_size,
                 args.embedding_size, 
                 padding_idx = trg_padding_idx
-                )
+            )
 
         self.gru = nn.GRU(
                 input_size = args.embedding_size,
