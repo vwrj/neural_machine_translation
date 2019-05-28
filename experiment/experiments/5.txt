@@ -1,0 +1,56 @@
+Experiment 5
+
+# Does increasing learning rate to 1e-3 from 5e-4 help FastText? 
+# Outcome: No it does not. Quitting this experiment. 
+
+train, epoch: 0, batch number: 0, batch loss: 10.776047299907294
+train, epoch: 0, batch number: 1000, batch loss: 6.099589308647261
+train, epoch: 0, batch number: 2000, batch loss: 6.5142490671641795epoch: 0, average loss for epoch: 6.254864288119494, size of last batch 64
+["SOS and it 's . EOS", "SOS and it 's . EOS", "SOS it 's . EOS", "SOS it 's . EOS", "SOS it 's . EOS", "SOS it 's . EOS", "SOS it 's . EOS", "SOS it 's . EOS", "SOS it 's . EOS", "SOS and it 's . EOS"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 0.1727202572930558
+train, epoch: 1, batch number: 0, batch loss: 6.157313475355377
+
+
+# What about decreasing learning rate to 1e-4 from 5e-4? Does that help FastText?
+# Outcome: No it does not. Quitting this experiment. 
+
+train, epoch: 0, batch number: 0, batch loss: 10.775841529672231
+train, epoch: 0, batch number: 1000, batch loss: 6.518182273680316
+train, epoch: 0, batch number: 2000, batch loss: 5.645692908245584epoch: 0, average loss for epoch: 6.179124459130116, size of last batch 64
+["SOS it 's is . EOS", "SOS it 's is . EOS", "SOS it 's is . EOS", "SOS it 's is . EOS", "SOS it 's is . EOS", "SOS it 's is . EOS", "SOS it 's is . EOS", "SOS it 's is . EOS", "SOS it 's is . EOS", "SOS it 's is . EOS"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 0.08423321844226679
+train, epoch: 1, batch number: 0, batch loss: 6.179110548783592
+train, epoch: 1, batch number: 1000, batch loss: 6.058558580260237
+
+
+# What about increasing gradient clipping? Does that help FastText (with basic attention model)? (So 5e-4 Adam and 0.5 clip instead of 0.1)
+# Outcome: Nope. Loss values are slower than 5e-4 Adam and 0.1 gradient clip. So accepting larger gradients is ... noisier? Not sure what conclusion to draw from that.   
+
+
+train, epoch: 0, batch number: 0, batch loss: 10.775986904113607
+train, epoch: 0, batch number: 1000, batch loss: 6.432048223985134
+train, epoch: 0, batch number: 2000, batch loss: 5.0805157446578555epoch: 0, average loss for epoch: 6.132071295870423, size of last batch 64["SOS so 's the be . EOS", "SOS so 's the be . EOS", "SOS it 's the be . EOS", "SOS it 's the be . EOS", "SOS it 's . EOS", "SOS it 's the be . EOS", "SOS it 's the be . EOS", "SOS so 's the be . EOS", "SOS it 's the be . EOS", "SOS so 's the be . EOS"]['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 0.08286670261241592
+
+train, epoch: 1, batch number: 0, batch loss: 5.575630576616957
+train, epoch: 1, batch number: 1000, batch loss: 5.757959905660377
+train, epoch: 1, batch number: 2000, batch loss: 4.356490666687253
+epoch: 1, average loss for epoch: 5.344830540410052, size of last batch 64
+
+["SOS so that 's a lot . EOS", "SOS it 's a lot . EOS", "SOS it 's a lot . EOS", "SOS so that 's very much . EOS", "SOS it 's very much . EOS", "SOS it 's very much . EOS", "SOS it 's very much . EOS", "SOS and i 'm going . EOS", "SOS so what 's the ? EOS", "SOS and it 's not . EOS"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 2.1149069553019784
+
+train, epoch: 2, batch number: 0, batch loss: 4.895956821799598
+train, epoch: 2, batch number: 1000, batch loss: 5.370927918632075
+train, epoch: 2, batch number: 2000, batch loss: 3.926010915884387
+epoch: 2, average loss for epoch: 4.869869473775097, size of last batch 64
+
+["SOS so i 'm going to do . EOS", "SOS it 's not a lot . EOS", "SOS it 's not the same of the world . EOS", "SOS it 's not very excited . EOS", 'SOS this is the same . EOS', "SOS it 's not very interesting . EOS", 'SOS this is a very interesting . EOS', "SOS we 're not going to be . EOS", 'SOS what is that ? EOS', "SOS i 'm going to be . EOS"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 2.418965486371254
+
+train, epoch: 3, batch number: 0, batch loss: 4.525896251361428
+train, epoch: 3, batch number: 1000, batch loss: 5.128867165165809
