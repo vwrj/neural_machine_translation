@@ -1,0 +1,56 @@
+Experiment 6: Adding Attention Mask (on padding) to basic attention model
+Outcome: It doesn't seem to improve convergence compared to basic attention model (5e-4 Adam and 0.1 gradient clip) 
+
+
+train, epoch: 0, batch number: 0, batch loss: 10.776028394358011
+train, epoch: 0, batch number: 1000, batch loss: 4.511085283401799
+train, epoch: 0, batch number: 2000, batch loss: 4.911072368642357
+epoch: 0, average loss for epoch: 5.237080740595414, size of last batch 64
+["SOS you can 't be a lot . EOS", "SOS and it 's not so much . EOS", "SOS it 's a lot of wheelbarrow . EOS", "SOS there 's a lot of two years . EOS", 'SOS this is a year . EOS', "SOS it 's going to be able . EOS", 'SOS this is a homemaker . EOS', "SOS we 've been overactive . EOS", 'SOS do does the world ? EOS', "SOS so i 've been beaten . EOS"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 3.004621088811569
+
+train, epoch: 1, batch number: 0, batch loss: 4.678447936225858
+train, epoch: 1, batch number: 1000, batch loss: 3.5234038781298906
+train, epoch: 1, batch number: 2000, batch loss: 4.257747062954118epoch: 1, average loss for epoch: 4.123741752590551, size of last batch 64
+train, epoch: 2, batch number: 0, batch loss: 4.021185049512697
+train, epoch: 2, batch number: 1000, batch loss: 3.048934912644268
+train, epoch: 2, batch number: 2000, batch loss: 3.8475214339175188epoch: 2, average loss for epoch: 3.612962810999006, size of last batch 64
+train, epoch: 3, batch number: 0, batch loss: 3.603035027718169
+train, epoch: 3, batch number: 1000, batch loss: 2.650961241625098
+train, epoch: 3, batch number: 2000, batch loss: 3.5630476739101185epoch: 3, average loss for epoch: 3.2332438305377087, size of last batch 64
+["SOS you 've got a perfect machine . EOS", 'SOS my mother was curious . EOS', 'SOS shame is vivienne disenfranchisement . EOS', 'SOS in sub-zero paulo . EOS', 'SOS this is evangelina firestone . EOS', "SOS it 's been celebrated . EOS", 'SOS this is the first divergence . EOS', 'SOS so we measured them into the community . EOS', 'SOS think about this ? EOS', 'SOS i was celebrated . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 7.263378685287384
+train, epoch: 4, batch number: 0, batch loss: 3.3070384449883763
+train, epoch: 4, batch number: 1000, batch loss: 2.328049541825606
+train, epoch: 4, batch number: 2000, batch loss: 3.3352174296959096epoch: 4, average loss for epoch: 2.9259489063475557, size of last batch 64
+train, epoch: 5, batch number: 0, batch loss: 3.046321405020565
+train, epoch: 5, batch number: 1000, batch loss: 2.0361920328393976
+train, epoch: 5, batch number: 2000, batch loss: 3.1016460702031754epoch: 5, average loss for epoch: 2.6627779235890783, size of last batch 64
+train, epoch: 6, batch number: 0, batch loss: 2.8719581964189915
+train, epoch: 6, batch number: 1000, batch loss: 1.769815507629108
+train, epoch: 6, batch number: 2000, batch loss: 2.89887348417317epoch: 6, average loss for epoch: 2.4345266933467435, size of last batch 64
+['SOS you have a perfect memory . EOS', 'SOS my mother was really proud of me . EOS', 'SOS morgana is a symbol of faith . EOS', 'SOS in the winter , floating down . EOS', 'SOS this is the foyer . EOS', "SOS it 's been bathed . EOS", 'SOS this is the first prototype . EOS', 'SOS we measured the skills around . EOS', 'SOS think about that ? EOS', 'SOS i was thrilled . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 8.904343269061311
+train, epoch: 7, batch number: 0, batch loss: 2.6406269209920423
+train, epoch: 7, batch number: 1000, batch loss: 1.534031159068124
+train, epoch: 7, batch number: 2000, batch loss: 2.7364897466193487epoch: 7, average loss for epoch: 2.2367878776765733, size of last batch 64
+train, epoch: 8, batch number: 0, batch loss: 2.420302755331277
+train, epoch: 8, batch number: 1000, batch loss: 1.3271276148645343
+train, epoch: 8, batch number: 2000, batch loss: 2.5855133417989773epoch: 8, average loss for epoch: 2.061616071305829, size of last batch 64
+train, epoch: 9, batch number: 0, batch loss: 2.258913926982743
+train, epoch: 9, batch number: 1000, batch loss: 1.168355019439554
+train, epoch: 9, batch number: 2000, batch loss: 2.4471959831640206epoch: 9, average loss for epoch: 1.9080749889521689, size of last batch 64
+['SOS you have a perfect memory . EOS', 'SOS king knew the love to know . EOS', "SOS ralph moore 's faith EOS", 'SOS at the height of the rock , the tentacles EOS', 'SOS this is the kitchen man . EOS', "SOS it 's a time lapse . EOS", 'SOS this is the first prototype . EOS', 'SOS we selectively communicate . EOS', 'SOS think of that ? EOS', 'SOS i was thrilled . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 9.123732496068941
+train, epoch: 10, batch number: 0, batch loss: 2.195214005498927
+train, epoch: 10, batch number: 1000, batch loss: 1.026404916587197
+train, epoch: 10, batch number: 2000, batch loss: 2.306080599518972
+epoch: 10, average loss for epoch: 1.7674128192122533, size of last batch 64
+train, epoch: 11, batch number: 0, batch loss: 2.027416747697604
+train, epoch: 11, batch number: 1000, batch loss: 0.8849794868385661
+train, epoch: 11, batch number: 2000, batch loss: 2.1620830950618943
+epoch: 11, average loss for epoch: 1.6408321041461924, size of last batch 64

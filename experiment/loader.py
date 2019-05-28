@@ -110,7 +110,7 @@ def load_data(args):
             exts=(args.src_ext, args.trg_ext), fields=(SRC, TRG)
             )
     
-    if args.fasttext:
+    if hasattr(args, 'fasttext'):
         src_vecs = Vectors(name=args.fasttext_src_dir, max_vectors=args.max_vocab_size)
         trg_vecs = Vectors(name=args.fasttext_trg_dir, max_vectors=args.max_vocab_size)
         

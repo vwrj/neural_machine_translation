@@ -9,9 +9,10 @@ class Encoder(nn.Module):
     def __init__(self, args, padding_idx, src_vocab_size):
         super(Encoder, self).__init__()
         self.args = args
+        self.padding_idx = padding_idx
         self.num_directions = 2 if args.bidirectional else 1
 
-        if args.fasttext:
+        if hasattr(args, 'fasttext'):
             self.embedding = nn.Embedding(src_vocab_size, args.embedding_size).from_pretrained(args.src.vocab.vectors)
         else:
             self.embedding = nn.Embedding(src_vocab_size, args.embedding_size, padding_idx = padding_idx)
@@ -23,9 +24,9 @@ class Encoder(nn.Module):
                 bidirectional = args.bidirectional
                 )
 
-    def forward(self, hidden, x, lengths):
-
-        x = self.embedding(x)
+    def forward(self, hidden, src_tokens, lengths):
+        
+        x = self.embedding(src_tokens)
 
         x = pack_padded_sequence(x, lengths)
         x, hidden = self.rnn(x, hidden)
@@ -33,7 +34,13 @@ class Encoder(nn.Module):
 
         if self.num_directions == 2:
             x = x[:, :, :self.args.hidden_size] + x[:, :, self.args.hidden_size:]
-        return x, hidden
+            
+        # pad_packed_sequence calculates length of longest sequence and returns that as the length
+        # sometimes that may not be equal to max_len (set to 50 by default)
+        new_len = x.size()[0]
+        encoder_padding_mask = src_tokens[:new_len, :].eq(self.padding_idx)
+                
+        return x, hidden, encoder_padding_mask
 
     def random_init_hidden(self, device, current_batch_size):
         # only needed for encoder, since decoder's first hidden state is the output of encoder
@@ -67,12 +74,18 @@ class Attn(nn.Module):
             self.attn = nn.Linear(self.hidden_size * 2, hidden_size)
             self.v = nn.Parameter(torch.FloatTensor(1, hidden_size))
 
-    def forward(self, hidden, encoder_outputs):
+    def forward(self, hidden, encoder_outputs, padding_mask = None):
       
-        energy = self.score(hidden, encoder_outputs)
-        score = F.softmax(energy, dim = 1).view(1, self.batch_size, -1) # works, but bad code. 
-        context_vector = torch.bmm(score.transpose(1, 0), encoder_outputs.transpose(1, 0))
-        return context_vector, score
+        attn_scores = self.score(hidden, encoder_outputs)
+        
+        # don't attend over padding (taken from Fairseq)
+        if padding_mask is not None:
+            attn_scores = attn_scores.squeeze().float().masked_fill_(padding_mask.t(), float('-inf')).type_as(attn_scores) 
+            # FP16 support: cast to float and back
+        
+        attn_scores = F.softmax(attn_scores, dim = 1).view(1, self.batch_size, -1) # works, but bad code. 
+        context_vector = torch.bmm(attn_scores.transpose(1, 0), encoder_outputs.transpose(1, 0))
+        return context_vector, attn_scores
 
     def score(self, hidden, encoder_output):
         '''
@@ -80,7 +93,7 @@ class Attn(nn.Module):
             hidden: size 1 x B x hidden_size
             encoder_output: size N x B x hidden_size
         Return
-            energy: size B x N x 1
+            attn_scores: size B x N x 1
 
         torch.bmm performs a batch matrix-matrix product. 
         torch.bmm(batch1, batch2) 
@@ -88,12 +101,10 @@ class Attn(nn.Module):
         '''
         self.batch_size = hidden.shape[1]
         if self.method == 'dot':
-            energy = torch.bmm(encoder_output.transpose(1, 0), hidden.squeeze(0).unsqueeze(2))
-            return energy
+            return torch.bmm(encoder_output.transpose(1, 0), hidden.squeeze(0).unsqueeze(2))
 
         elif self.method == 'general':
-            energy = torch.bmm(encoder_output.transpose(1, 0), self.attn(hidden.squeeze(0)).unsqueeze(2))
-            return energy
+            return torch.bmm(encoder_output.transpose(1, 0), self.attn(hidden.squeeze(0)).unsqueeze(2))
 
 
 class LuongAttnDecoderRNN(nn.Module):
@@ -108,7 +119,7 @@ class LuongAttnDecoderRNN(nn.Module):
         self.device = device
 
         # Define layers
-        if args.fasttext:
+        if hasattr(args, 'fasttext'):
             self.embedding = nn.Embedding(self.output_size, args.embedding_size).from_pretrained(args.trg.vocab.vectors)
         else:
             self.embedding = nn.Embedding(
@@ -128,7 +139,7 @@ class LuongAttnDecoderRNN(nn.Module):
 
         self.attn = Attn(self.attn_model, self.hidden_size)
 
-    def forward(self, hidden, input_seq, encoder_outputs):
+    def forward(self, hidden, input_seq, encoder_outputs, encoder_padding_mask = None):
 
         # Get embedding of current input word (last output word)
         batch_size = input_seq.size(0)
@@ -142,7 +153,7 @@ class LuongAttnDecoderRNN(nn.Module):
         rnn_output, hidden = self.gru(embedded, hidden)
         
         # Calculate attention from current RNN hidden state and all encoder outputs;
-        context, attn_weights = self.attn(rnn_output, encoder_outputs)
+        context, attn_weights = self.attn(rnn_output, encoder_outputs, encoder_padding_mask)
 
         rnn_output = rnn_output.squeeze(0) # S=1 x B x N --> B x N
         context = context.squeeze(1) # B x S=1 x N --> B x N
