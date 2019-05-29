@@ -1,0 +1,66 @@
+Experiment 7: What happens if we increase beam search window from 2 to 10? (On attention padding mask)
+Outcome: It helps bleu score a lot! I got 18.37 which was the highest I got so far. Lol nice. 
+
+
+
+train, epoch: 0, batch number: 0, batch loss: 10.775885723440227
+train, epoch: 0, batch number: 1000, batch loss: 5.339151278409091
+train, epoch: 0, batch number: 2000, batch loss: 4.40697045669317epoch: 0, average loss for epoch: 5.466798213057836, size of last batch 64
+["SOS it 's a lot . EOS", "SOS let 's do it . EOS", 'SOS one of the world . EOS', "SOS and it 's in the world . EOS", 'SOS so this is the internet . EOS', "SOS it 's all it . EOS", 'SOS this is it . EOS', 'SOS we went to the world . EOS', 'SOS what do it ? EOS', "SOS i didn 't . EOS"]
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 4.352048521687093
+
+train, epoch: 1, batch number: 0, batch loss: 5.002324661867365
+train, epoch: 1, batch number: 1000, batch loss: 4.113054230925325
+train, epoch: 1, batch number: 2000, batch loss: 3.5785157777470022
+epoch: 1, average loss for epoch: 4.131856572083862, size of last batch 64
+
+train, epoch: 2, batch number: 0, batch loss: 4.318772241083115
+train, epoch: 2, batch number: 1000, batch loss: 3.5332187669101733
+train, epoch: 2, batch number: 2000, batch loss: 3.0969100808948125
+epoch: 2, average loss for epoch: 3.559341832428473, size of last batch 64
+
+train, epoch: 3, batch number: 0, batch loss: 3.8855082726603403
+train, epoch: 3, batch number: 1000, batch loss: 3.1199322324810606
+train, epoch: 3, batch number: 2000, batch loss: 2.755391460016945
+epoch: 3, average loss for epoch: 3.1543493263182154, size of last batch 64
+['SOS i have a perfect mirror . EOS', "SOS well , let 's know the answer . EOS", 'SOS hollywood is the same . EOS', 'SOS in the netherlands . EOS', 'SOS this is a hydras . EOS', "SOS it 's very time . EOS", 'SOS this is the first one . EOS', 'SOS we accumulate the communities . EOS', 'SOS think ? EOS', 'SOS i was very nervous . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 13.429404973095743
+
+train, epoch: 4, batch number: 0, batch loss: 3.560102266374891
+train, epoch: 4, batch number: 1000, batch loss: 2.809764779491342
+train, epoch: 4, batch number: 2000, batch loss: 2.5012123020398853
+epoch: 4, average loss for epoch: 2.8475223409168797, size of last batch 64
+
+train, epoch: 5, batch number: 0, batch loss: 3.291311320626091
+train, epoch: 5, batch number: 1000, batch loss: 2.5295424952651517
+train, epoch: 5, batch number: 2000, batch loss: 2.2316670502313607
+epoch: 5, average loss for epoch: 2.6048166443626894, size of last batch 64
+
+train, epoch: 6, batch number: 0, batch loss: 3.1270070234102314
+train, epoch: 6, batch number: 1000, batch loss: 2.338979640151515
+train, epoch: 6, batch number: 2000, batch loss: 1.9768779225593065epoch: 6, average loss for epoch: 2.4110008811449175, size of last batch 64
+['SOS i have a perfect memory . EOS', 'SOS riley knows love . EOS', 'SOS hillel is the paradox of the potential . EOS', 'SOS in the winter of the lake . EOS', 'SOS this is a hydras . EOS', "SOS it 's so much time . EOS", 'SOS this is the first one . EOS', 'SOS we put our communities . EOS', 'SOS think about it ? EOS', 'SOS i was very marginalized . EOS']['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 17.23324899634522
+
+train, epoch: 7, batch number: 0, batch loss: 2.9748343422774868
+train, epoch: 7, batch number: 1000, batch loss: 2.2090496905438313
+train, epoch: 7, batch number: 2000, batch loss: 1.828951488570451
+epoch: 7, average loss for epoch: 2.2482590276598136, size of last batch 64
+
+train, epoch: 8, batch number: 0, batch loss: 2.804309785053992
+train, epoch: 8, batch number: 1000, batch loss: 2.0820314613771647
+train, epoch: 8, batch number: 2000, batch loss: 1.6883045948334854
+epoch: 8, average loss for epoch: 2.1142746029058803, size of last batch 64
+
+train, epoch: 9, batch number: 0, batch loss: 2.722850965995855
+train, epoch: 9, batch number: 1000, batch loss: 2.0386813869724025
+train, epoch: 9, batch number: 2000, batch loss: 1.6575068532488269
+epoch: 9, average loss for epoch: 2.002193224929707, size of last batch 64
+['SOS you have a perfect memory . EOS', 'SOS burma knows what i love . EOS', 'SOS kofi annan is badass . EOS', 'SOS in the end of the cold season . EOS', 'SOS this is a family portrait . EOS', "SOS it 's time-consuming . EOS", 'SOS this is the first one . EOS', 'SOS we have automation . EOS', 'SOS think about it ? EOS', 'SOS i was so thrilled . EOS']
+['SOS he has the most <unk> memory . EOS', 'SOS remi knows what love is . EOS', 'SOS kofi is the embodiment of possibility . EOS', 'SOS in the cold , windy night . EOS', 'SOS this is a family portrait . EOS', 'SOS it was very time-consuming . EOS', 'SOS this was the very first . EOS', 'SOS we activate communities . EOS', 'SOS guess what ? EOS', 'SOS and i was distraught . EOS']
+bleu score: 18.611527493011508
+
+train, epoch: 10, batch number: 0, batch loss: 2.646138828670375
+train, epoch: 10, batch number: 1000, batch loss: 1.8869474600919913
