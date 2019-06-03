@@ -1,0 +1,9 @@
+Experiment 8
+
+If I take out SOS and EOS, does that change the BLEU score? 
+Outcome: Yeah it brings it down by 2. 
+
+[' i have a perfect memory . ', ' burma knew what it was . ', ' okinawa is a feature of potential . ', " and it 's in the cold side . ", ' this is a family portrait . ', " it 's time-consuming . ", " here 's the first one . ", ' we have automation . ', ' think about that ? ', ' i was so thrilled . ']
+[' he has the most <unk> memory . ', ' remi knows what love is . ', ' kofi is the embodiment of possibility . ', ' in the cold , windy night . ', ' this is a family portrait . ', ' it was very time-consuming . ', ' this was the very first . ', ' we activate communities . ', ' guess what ? ', ' and i was distraught . ']
+
+bleu score: 16.39520097663309
