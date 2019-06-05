@@ -1,0 +1,359 @@
+Experiment 9
+
+Using lr scheduler (on val BLEU score instead of val loss)
+
+Three runs, look at the bottom most run. 18 BLEU score (with the new BLEU where it clips off SOS and EOS). Good stuff. One of the runs only had a BLEU score of 7 and I guess it was just a bad run (bad initialization?) because the third one got me to 18.  
+
+
+
+train, epoch: 0, batch number: 0, batch loss: 10.775811887254902
+train, epoch: 0, batch number: 1000, batch loss: 5.197559904572148
+train, epoch: 0, batch number: 2000, batch loss: 4.880216949139798
+epoch: 0, average loss for epoch: 5.511659626664284, size of last batch 64
+
+bleu score: 1.5510899066242008
+[' so this is a lot . ', " so it 's not . ", ' this is the world . ', " it 's the world . ", ' this is the world . ', " it 's a lot . ", " it 's a couple . ", ' so this is it . ', ' but what is you ? ', " i 'm going to do . "]
+[' he has the most <unk> memory . ', ' remi knows what love is . ', ' kofi is the embodiment of possibility . ', ' in the cold , windy night . ', ' this is a family portrait . ', ' it was very time-consuming . ', ' this was the very first . ', ' we activate communities . ', ' guess what ? ', ' and i was distraught . ']
+train, epoch: 1, batch number: 0, batch loss: 5.641276041666667
+train, epoch: 1, batch number: 1000, batch loss: 4.085914232906879
+train, epoch: 1, batch number: 2000, batch loss: 4.1764490533265155epoch: 1, average loss for epoch: 4.389546981618581, size of last batch 64
+bleu score: 4.51530104817312
+
+train, epoch: 2, batch number: 0, batch loss: 5.042163266433622
+train, epoch: 2, batch number: 1000, batch loss: 3.572626101090604
+train, epoch: 2, batch number: 2000, batch loss: 3.747253594201155epoch: 2, average loss for epoch: 3.82577136323402, size of last batch 64
+bleu score: 7.293037109659283
+
+train, epoch: 3, batch number: 0, batch loss: 4.583227546910157
+train, epoch: 3, batch number: 1000, batch loss: 3.069426384228188
+train, epoch: 3, batch number: 2000, batch loss: 3.413749041295717epoch: 3, average loss for epoch: 3.4060251612645436, size of last batch 64
+bleu score: 9.587753400777697
+[' and i have a strange bias . ', ' they know the answer . ', ' ecosia is the essence of nature . ', ' in fact , in the surface . ', ' this is the family . ', " it 's very quickly . ", ' this is the first story . ', ' we connect the community . ', ' think about this ? ', ' i was thrilled . ']
+[' he has the most <unk> memory . ', ' remi knows what love is . ', ' kofi is the embodiment of possibility . ', ' in the cold , windy night . ', ' this is a family portrait . ', ' it was very time-consuming . ', ' this was the very first . ', ' we activate communities . ', ' guess what ? ', ' and i was distraught . ']
+
+train, epoch: 4, batch number: 0, batch loss: 4.207270132694471
+train, epoch: 4, batch number: 1000, batch loss: 2.73156312264052
+train, epoch: 4, batch number: 2000, batch loss: 3.0861358201997113epoch: 4, average loss for epoch: 3.085603112615138, size of last batch 64
+bleu score: 11.61988223906165
+
+train, epoch: 5, batch number: 0, batch loss: 3.9329040978584056
+train, epoch: 5, batch number: 1000, batch loss: 2.4590671206480703
+train, epoch: 5, batch number: 2000, batch loss: 2.8662445391452116epoch: 5, average loss for epoch: 2.8306029048916965, size of last batch 64
+bleu score: 12.579955201868541
+
+train, epoch: 6, batch number: 0, batch loss: 3.769507393121183
+train, epoch: 6, batch number: 1000, batch loss: 2.339135414481963
+train, epoch: 6, batch number: 2000, batch loss: 2.6982699147317133epoch: 6, average loss for epoch: 2.6242232528098706, size of last batch 64
+bleu score: 14.311732093260183
+[' you have a perfect memory . ', ' it knows love love . ', ' psoriasis is the essence of the possibility . ', ' in the dark night . ', ' this is the family . ', " it 's very much time . ", ' this is studios . ', ' we mashed the community . ', ' how do you see ? ', ' i was thrilled . ']
+[' he has the most <unk> memory . ', ' remi knows what love is . ', ' kofi is the embodiment of possibility . ', ' in the cold , windy night . ', ' this is a family portrait . ', ' it was very time-consuming . ', ' this was the very first . ', ' we activate communities . ', ' guess what ? ', ' and i was distraught . ']
+
+train, epoch: 7, batch number: 0, batch loss: 3.6401739166465767
+train, epoch: 7, batch number: 1000, batch loss: 2.1179571164534394
+train, epoch: 7, batch number: 2000, batch loss: 2.5532814003849857epoch: 7, average loss for epoch: 2.4613516203207615, size of last batch 64
+bleu score: 15.133828260947286
+
+train, epoch: 8, batch number: 0, batch loss: 3.5135886898304403
+train, epoch: 8, batch number: 1000, batch loss: 1.9891280411073826
+train, epoch: 8, batch number: 2000, batch loss: 2.4068740976900864epoch: 8, average loss for epoch: 2.318677059225438, size of last batch 64
+bleu score: 15.464612696610065
+
+train, epoch: 9, batch number: 0, batch loss: 3.436668776117004
+
+
+
+
+# WTF happened with the run below...huh? I don't think I changed anything. 
+
+train, epoch: 0, batch number: 0, batch loss: 10.776077637053877
+train, epoch: 0, batch number: 1000, batch loss: 5.200991803648844
+train, epoch: 0, batch number: 2000, batch loss: 5.4007293897216275epoch: 0, average loss for epoch: 5.569693239467552, size of last batch 64
+bleu score: 1.3170999977838322
+[' they have a world . ', " it 's going to do . ", ' this is the world . ', " it 's a world . ", ' this is a world . ', " it 's not . ", ' this is a lot . ', ' we have a world . ', ' what do you do ? ', ' i think that . ']
+[' he has the most <unk> memory . ', ' remi knows what love is . ', ' kofi is the embodiment of possibility . ', ' in the cold , windy night . ', ' this is a family portrait . ', ' it was very time-consuming . ', ' this was the very first . ', ' we activate communities . ', ' guess what ? ', ' and i was distraught . ']
+
+train, epoch: 1, batch number: 0, batch loss: 5.066116364426047
+train, epoch: 1, batch number: 1000, batch loss: 4.110354949421965
+train, epoch: 1, batch number: 2000, batch loss: 4.633947466374464epoch: 1, average loss for epoch: 4.401879168830749, size of last batch 64
+bleu score: 3.5610547559810133
+
+train, epoch: 2, batch number: 0, batch loss: 4.228519646533974
+train, epoch: 2, batch number: 1000, batch loss: 3.457607591221098
+train, epoch: 2, batch number: 2000, batch loss: 4.18040266996788epoch: 2, average loss for epoch: 3.7819347621330333, size of last batch 64
+bleu score: 5.338049987757914
+
+train, epoch: 3, batch number: 0, batch loss: 3.69528367900652
+train, epoch: 3, batch number: 1000, batch loss: 2.965634596278902
+train, epoch: 3, batch number: 2000, batch loss: 3.842710180507227epoch: 3, average loss for epoch: 3.3464098912896216, size of last batch 64
+bleu score: 6.472674278102458
+[' you have a lot of fun . ', ' love was what i love . ', ' bma is the stigma of compassion . ', " in the 1970s , there 's a flywheel . ", " this is a child 's family . ", ' it was very long . ', ' this is the first time . ', ' we bring these groups . ', ' think about it ? ', ' i was very excited . ']
+[' he has the most <unk> memory . ', ' remi knows what love is . ', ' kofi is the embodiment of possibility . ', ' in the cold , windy night . ', ' this is a family portrait . ', ' it was very time-consuming . ', ' this was the very first . ', ' we activate communities . ', ' guess what ? ', ' and i was distraught . ']
+
+train, epoch: 4, batch number: 0, batch loss: 3.3254077835449554
+train, epoch: 4, batch number: 1000, batch loss: 2.6145155008128613
+train, epoch: 4, batch number: 2000, batch loss: 3.6059685325214135epoch: 4, average loss for epoch: 3.0080244600236368, size of last batch 64
+bleu score: 6.931659884180452
+
+train, epoch: 5, batch number: 0, batch loss: 3.0463418116206245
+train, epoch: 5, batch number: 1000, batch loss: 2.3352214482478324
+train, epoch: 5, batch number: 2000, batch loss: 3.3958447474739026epoch: 5, average loss for epoch: 2.7242274698824627, size of last batch 64
+bleu score: 7.289657766787409
+
+train, epoch: 6, batch number: 0, batch loss: 2.8056231769045983
+train, epoch: 6, batch number: 1000, batch loss: 2.084607709763367
+train, epoch: 6, batch number: 2000, batch loss: 3.2071261354891596epoch: 6, average loss for epoch: 2.4800123167002504, size of last batch 64
+bleu score: 7.336412881138865
+[' you have an alligator . ', ' soldiers love love . ', ' rp is the fortingall yew . ', ' in the jungles of arizona . ', " here 's my family . ", ' it was very long . ', ' this is the launch . ', ' we support the community . ', ' think about this ? ', ' i was very excited . ']
+[' he has the most <unk> memory . ', ' remi knows what love is . ', ' kofi is the embodiment of possibility . ', ' in the cold , windy night . ', ' this is a family portrait . ', ' it was very time-consuming . ', ' this was the very first . ', ' we activate communities . ', ' guess what ? ', ' and i was distraught . ']
+
+train, epoch: 7, batch number: 0, batch loss: 2.5789638249613933
+train, epoch: 7, batch number: 1000, batch loss: 1.8778135443009394
+train, epoch: 7, batch number: 2000, batch loss: 3.0157232835920773epoch: 7, average loss for epoch: 2.273210310346922, size of last batch 64
+bleu score: 6.892391139592372
+
+train, epoch: 8, batch number: 0, batch loss: 2.4568122439623368
+train, epoch: 8, batch number: 1000, batch loss: 1.6686156520953757
+train, epoch: 8, batch number: 2000, batch loss: 2.7104134079730997epoch: 8, average loss for epoch: 2.031485157946409, size of last batch 64
+bleu score: 7.476141705259748
+
+train, epoch: 9, batch number: 0, batch loss: 2.2476638238889843
+train, epoch: 9, batch number: 1000, batch loss: 1.5103257372200145
+train, epoch: 9, batch number: 2000, batch loss: 2.588629058903239epoch: 9, average loss for epoch: 1.887284903912065, size of last batch 64
+bleu score: 7.600970699770353
+[' you have a memory . ', ' howard knew what love is . ', ' ines is the mystery of life . ', ' in the mountains of arizona , of course . ', " here 's the family 's family . ", " it 's pretty much time . ", ' this is the front . ', ' we spread the community . ', ' think about that ? ', ' i had very closely . ']
+[' he has the most <unk> memory . ', ' remi knows what love is . ', ' kofi is the embodiment of possibility . ', ' in the cold , windy night . ', ' this is a family portrait . ', ' it was very time-consuming . ', ' this was the very first . ', ' we activate communities . ', ' guess what ? ', ' and i was distraught . ']
+
+train, epoch: 10, batch number: 0, batch loss: 2.1026272011195952
+train, epoch: 10, batch number: 1000, batch loss: 1.3718247606575145
+train, epoch: 10, batch number: 2000, batch loss: 2.470794873778774epoch: 10, average loss for epoch: 1.7669834487171743, size of last batch 64
+bleu score: 7.018172944276451
+
+train, epoch: 11, batch number: 0, batch loss: 1.9739999450390358
+train, epoch: 11, batch number: 1000, batch loss: 1.242227437454841
+train, epoch: 11, batch number: 2000, batch loss: 2.3255615234375epoch: 11, average loss for epoch: 1.6586112581390386, size of last batch 64
+bleu score: 7.2990613807216125
+
+
+
+
+
+
+
+train, epoch: 0, batch number: 0, batch loss: 10.775854310745252
+
+train, epoch: 0, batch number: 1000, batch loss: 5.171800489549513
+train, epoch: 0, batch number: 2000, batch loss: 4.316465833441055
+epoch: 0, average loss for epoch: 5.220720579743558, size of last batch 64
+bleu score: 2.531869518523902
+['you have a story .', "well , you don 't know .", "one of it 's springtime .", "it 's plenty percent .", 'this is flooring .', "so it 's proportional .", 'this is springtime .', 'we need up up up .', 'why do you climb out ?', "i 've got rid ."]
+['he has the most <unk> memory .', 'remi knows what love is .', 'kofi is the embodiment of possibility .', 'in the cold , windy night .', 'this is a family portrait .', 'it was very time-consuming .', 'this was the very first .', 'we activate communities .', 'guess what ?', 'and i was distraught .']
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 1, batch number: 0, batch loss: 5.016562048410405
+train, epoch: 1, batch number: 1000, batch loss: 4.104299570058847
+train, epoch: 1, batch number: 2000, batch loss: 3.4883968822711995
+epoch: 1, average loss for epoch: 4.005242272296445, size of last batch 64
+bleu score: 6.562146376337518
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 2, batch number: 0, batch loss: 4.4320002838563175
+train, epoch: 2, batch number: 1000, batch loss: 3.5360975389356737
+train, epoch: 2, batch number: 2000, batch loss: 3.045764122285419
+epoch: 2, average loss for epoch: 3.4145880682305414, size of last batch 64
+bleu score: 10.25206700537963
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 3, batch number: 0, batch loss: 3.8669830750670933
+train, epoch: 3, batch number: 1000, batch loss: 3.12284534008472
+train, epoch: 3, batch number: 2000, batch loss: 2.6726336789846172
+epoch: 3, average loss for epoch: 3.0037564537736876, size of last batch 64
+bleu score: 12.867438074354158
+['you have a perfect interface .', 'commandant beaucoup .', 'durkheim is the key .', 'in the early hills .', 'this is the family .', "it 's very time .", 'this is the first one .', 'we analyzed the communities .', 'guess what ?', 'i was very excited .']
+['he has the most <unk> memory .', 'remi knows what love is .', 'kofi is the embodiment of possibility .', 'in the cold , windy night .', 'this is a family portrait .', 'it was very time-consuming .', 'this was the very first .', 'we activate communities .', 'guess what ?', 'and i was distraught .']
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 4, batch number: 0, batch loss: 3.5552620671191164
+train, epoch: 4, batch number: 1000, batch loss: 2.806646966314935
+train, epoch: 4, batch number: 2000, batch loss: 2.426879756576396
+epoch: 4, average loss for epoch: 2.6946189581417723, size of last batch 64
+bleu score: 14.477989616298638
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 5, batch number: 0, batch loss: 3.2849619051919903
+train, epoch: 5, batch number: 1000, batch loss: 2.5576857529677355
+train, epoch: 5, batch number: 2000, batch loss: 2.1704990264671666
+
+bleu score: 15.511894215939725
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 6, batch number: 0, batch loss: 3.1508075389657306
+train, epoch: 6, batch number: 1000, batch loss: 2.3725056834035105
+train, epoch: 6, batch number: 2000, batch loss: 2.0030347159384694
+epoch: 6, average loss for epoch: 2.2641300438235286, size of last batch 64
+bleu score: 15.840265303416288
+['you have a perfect memory .', 'dorcas knows what love is .', 'honeybees is the rule of power .', 'in the silence of silence .', 'this is portraits .', "it 's so much .", 'this is the first one .', 'we measure communities .', 'think .', 'i was very high .']
+['he has the most <unk> memory .', 'remi knows what love is .', 'kofi is the embodiment of possibility .', 'in the cold , windy night .', 'this is a family portrait .', 'it was very time-consuming .', 'this was the very first .', 'we activate communities .', 'guess what ?', 'and i was distraught .']
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 7, batch number: 0, batch loss: 2.9693525898663293
+train, epoch: 7, batch number: 1000, batch loss: 2.2087598528180803
+train, epoch: 7, batch number: 2000, batch loss: 1.827613491306877
+epoch: 7, average loss for epoch: 2.107763976439612, size of last batch 64
+bleu score: 16.309423544542692
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 8, batch number: 0, batch loss: 2.772924018437758
+train, epoch: 8, batch number: 1000, batch loss: 2.080353972199675
+train, epoch: 8, batch number: 2000, batch loss: 1.7006822051528567
+epoch: 8, average loss for epoch: 1.9722601664900847, size of last batch 64
+bleu score: 17.530259865997
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 9, batch number: 0, batch loss: 2.7410428010167216
+train, epoch: 9, batch number: 1000, batch loss: 1.9622039794921875
+train, epoch: 9, batch number: 2000, batch loss: 1.636786917496122
+epoch: 9, average loss for epoch: 1.8545149614469503, size of last batch 64
+bleu score: 17.218552362255938
+['you have a perfect memory .', 'ashok knows what love is .', 'x is the main rule of power .', 'at dusk , the cold night .', 'this is the family portrait .', "it 's very time-consuming .", "here 's the first one .", 'we activate the community .', 'guess what ?', 'i was so moved .']
+['he has the most <unk> memory .', 'remi knows what love is .', 'kofi is the embodiment of possibility .', 'in the cold , windy night .', 'this is a family portrait .', 'it was very time-consuming .', 'this was the very first .', 'we activate communities .', 'guess what ?', 'and i was distraught .']
+
+Learning rate of encoder_optimizer: 0.00025
+Learning rate of decoder_optimizer: 0.00025
+train, epoch: 10, batch number: 0, batch loss: 2.7367996732426714
+train, epoch: 10, batch number: 1000, batch loss: 1.7786102294921875
+train, epoch: 10, batch number: 2000, batch loss: 1.4263344166074199
+epoch: 10, average loss for epoch: 1.669284822065828, size of last batch 64
+bleu score: 18.29722885213726
+
+Learning rate of encoder_optimizer: 0.00025
+Learning rate of decoder_optimizer: 0.00025
+train, epoch: 11, batch number: 0, batch loss: 2.490100510941371
+train, epoch: 11, batch number: 1000, batch loss: 1.7076459612165178
+train, epoch: 11, batch number: 2000, batch loss: 1.3341690584200492
+epoch: 11, average loss for epoch: 1.5646434500703892, size of last batch 64
+bleu score: 18.527112507157742
+
+Learning rate of encoder_optimizer: 0.00025
+Learning rate of decoder_optimizer: 0.00025
+
+
+## Starting from previous model run 
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+
+
+train, epoch: 0, batch number: 0, batch loss: 1.1633004730325998
+train, epoch: 0, batch number: 1000, batch loss: 1.6318102850430254
+
+train, epoch: 0, batch number: 2000, batch loss: 2.387710108901515
+epoch: 0, average loss for epoch: 1.7785575304666519, size of last batch 64
+bleu score: 17.76743109509908
+['you have a perfect memory .', 'susana knows what love is .', 'leroy is the tipping point of power .', 'at the end of the dark night .', 'this is the family portrait .', "it 's very time-consuming .", "here 's the first one .", 'we activate the community .', 'think about that ?', 'i was desperate .']
+['he has the most <unk> memory .', 'remi knows what love is .', 'kofi is the embodiment of possibility .', 'in the cold , windy night .', 'this is a family portrait .', 'it was very time-consuming .', 'this was the very first .', 'we activate communities .', 'guess what ?', 'and i was distraught .']
+
+Learning rate of encoder_optimizer: 0.0005
+Learning rate of decoder_optimizer: 0.0005
+train, epoch: 1, batch number: 0, batch loss: 1.1623357728470203
+train, epoch: 1, batch number: 1000, batch loss: 1.4868017477031574
+train, epoch: 1, batch number: 2000, batch loss: 2.191318841628086
+epoch: 1, average loss for epoch: 1.6304240418371008, size of last batch 64
+bleu score: 17.65771820705093
+
+Learning rate of encoder_optimizer: 0.00025
+Learning rate of decoder_optimizer: 0.00025
+train, epoch: 2, batch number: 0, batch loss: 1.088887566347851
+train, epoch: 2, batch number: 1000, batch loss: 1.2593297859649975
+train, epoch: 2, batch number: 2000, batch loss: 1.8839111328125
+epoch: 2, average loss for epoch: 1.4090085711730793, size of last batch 64
+bleu score: 18.603356828085726
+
+Learning rate of encoder_optimizer: 0.00025
+Learning rate of decoder_optimizer: 0.00025
+train, epoch: 3, batch number: 0, batch loss: 0.9061539862243044
+train, epoch: 3, batch number: 1000, batch loss: 1.1541940124385353
+train, epoch: 3, batch number: 2000, batch loss: 1.7871839050224467
+epoch: 3, average loss for epoch: 1.3042206515485182, size of last batch 64
+bleu score: 18.482762815196455
+['he had a perfect memory .', 'hemingway knows what love was .', "tivo 's the tipping point for us .", 'in the dark night , the dark night .', 'this is the family portrait .', "it 's very time-consuming .", 'this is the first one .', 'we activate the communities .', 'think about this ?', 'i was very excited .']
+['he has the most <unk> memory .', 'remi knows what love is .', 'kofi is the embodiment of possibility .', 'in the cold , windy night .', 'this is a family portrait .', 'it was very time-consuming .', 'this was the very first .', 'we activate communities .', 'guess what ?', 'and i was distraught .']
+
+Learning rate of encoder_optimizer: 0.000125
+Learning rate of decoder_optimizer: 0.000125
+train, epoch: 4, batch number: 0, batch loss: 0.825653076171875
+train, epoch: 4, batch number: 1000, batch loss: 1.0035401022458916
+train, epoch: 4, batch number: 2000, batch loss: 1.5945846266484287
+epoch: 4, average loss for epoch: 1.1795387449468957, size of last batch 64
+bleu score: 18.704638961417075
+
+Learning rate of encoder_optimizer: 0.000125
+Learning rate of decoder_optimizer: 0.000125
+train, epoch: 5, batch number: 0, batch loss: 0.7436542701087521
+train, epoch: 5, batch number: 1000, batch loss: 0.9343043104215192
+train, epoch: 5, batch number: 2000, batch loss: 1.5419852003103955
+epoch: 5, average loss for epoch: 1.120314774999161, size of last batch 64
+bleu score: 18.750596107310844
+
+Learning rate of encoder_optimizer: 0.000125
+Learning rate of decoder_optimizer: 0.000125
+train, epoch: 6, batch number: 0, batch loss: 0.6693450319410559
+train, epoch: 6, batch number: 1000, batch loss: 0.8670074905174366
+train, epoch: 6, batch number: 2000, batch loss: 1.5002498947811447
+epoch: 6, average loss for epoch: 1.0709014575791274, size of last batch 64
+bleu score: 18.48788754336773
+['he had a perfect memory .', 'whipcar , the love of love .', 'kofi is the tipping point of power .', 'in the dark night , the dark night .', 'this is the family portrait .', "it 's very time .", 'this is the first one .', 'we activate the communities .', 'think about this ?', 'i was very relieved .']
+['he has the most <unk> memory .', 'remi knows what love is .', 'kofi is the embodiment of possibility .', 'in the cold , windy night .', 'this is a family portrait .', 'it was very time-consuming .', 'this was the very first .', 'we activate communities .', 'guess what ?', 'and i was distraught .']
+
+Learning rate of encoder_optimizer: 6.25e-05
+Learning rate of decoder_optimizer: 6.25e-05
+train, epoch: 7, batch number: 0, batch loss: 0.608915867599538
+train, epoch: 7, batch number: 1000, batch loss: 0.7964650661555382
+train, epoch: 7, batch number: 2000, batch loss: 1.395041588848555
+epoch: 7, average loss for epoch: 1.0086217882580653, size of last batch 64
+bleu score: 18.67249088760463
+
+Learning rate of encoder_optimizer: 3.125e-05
+Learning rate of decoder_optimizer: 3.125e-05
+train, epoch: 8, batch number: 0, batch loss: 0.5686318026824647
+train, epoch: 8, batch number: 1000, batch loss: 0.7656619622840645
+train, epoch: 8, batch number: 2000, batch loss: 1.3474995177469136
+epoch: 8, average loss for epoch: 0.9716623917435145, size of last batch 64
+bleu score: 18.625317178773187
+
+Learning rate of encoder_optimizer: 1.5625e-05
+Learning rate of decoder_optimizer: 1.5625e-05
+train, epoch: 9, batch number: 0, batch loss: 0.5434518098039088
+train, epoch: 9, batch number: 1000, batch loss: 0.7465752706271027
+train, epoch: 9, batch number: 2000, batch loss: 1.3227091060343013
+epoch: 9, average loss for epoch: 0.9517192741512108, size of last batch 64
+bleu score: 18.753549091237897
+['you have a perfect memory .', 'whipcar , the love of love .', 'kofi is the tipping point of power .', 'in the dark night , the dark night .', 'this is the family portrait .', "it 's so much time .", 'this is the first one .', 'we activate the communities .', 'think about that ?', 'i was very excited .']
+['he has the most <unk> memory .', 'remi knows what love is .', 'kofi is the embodiment of possibility .', 'in the cold , windy night .', 'this is a family portrait .', 'it was very time-consuming .', 'this was the very first .', 'we activate communities .', 'guess what ?', 'and i was distraught .']
+
+Learning rate of encoder_optimizer: 1.5625e-05
+Learning rate of decoder_optimizer: 1.5625e-05
+train, epoch: 10, batch number: 0, batch loss: 0.5315141646172913
+train, epoch: 10, batch number: 1000, batch loss: 0.7361726306733631
+train, epoch: 10, batch number: 2000, batch loss: 1.3159250929433222
+epoch: 10, average loss for epoch: 0.9423030132947332, size of last batch 64
+bleu score: 18.56742064128628
+
+Learning rate of encoder_optimizer: 7.8125e-06
+Learning rate of decoder_optimizer: 7.8125e-06
+train, epoch: 11, batch number: 0, batch loss: 0.5201042910350914
+train, epoch: 11, batch number: 1000, batch loss: 0.7269008470618207
+train, epoch: 11, batch number: 2000, batch loss: 1.3016303990425084
+epoch: 11, average loss for epoch: 0.9328514570322276, size of last batch 64
+bleu score: 18.47091696722728
+
+Learning rate of encoder_optimizer: 3.90625e-06
+Learning rate of decoder_optimizer: 3.90625e-06
